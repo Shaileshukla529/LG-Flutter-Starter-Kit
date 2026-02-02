@@ -1,0 +1,55 @@
+name: lg_flutter_stater_kit
+description: "A production-ready Flutter Starter Kit for Liquid Galaxy Controllers."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # 🛠️ State Management
+  flutter_riverpod: ^2.5.1
+  
+  # 💉 Dependency Injection
+  get_it: ^9.2.0
+  
+  # 📡 Liquid Galaxy Connection
+  dartssh2: ^2.10.0
+  
+  # 🔐 Security & Storage
+  flutter_secure_storage: ^10.0.0
+  flutter_dotenv: ^6.0.0
+  shared_preferences: ^2.2.3
+  
+  # 📱 UI & Responsiveness
+  flutter_screenutil: ^5.9.3
+  
+  # 🗺️ Maps 
+  google_maps_flutter: ^2.7.0
+  
+  # 🌐 Networking
+  dio: ^5.5.0+1
+
+  # 📂 Utilities
+  path_provider: ^2.1.3
+  permission_handler: ^12.0.1
+  
+  # 🎨 Icons
+  cupertino_icons: ^1.0.6
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  mockito: ^5.4.4
+  build_runner: ^2.4.9
+
+flutter:
+  uses-material-design: true
+  assets:
+    - .env
+    - assets/images/
