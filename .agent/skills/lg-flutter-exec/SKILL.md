@@ -1,79 +1,138 @@
 ---
 name: Liquid Galaxy Flutter Plan Executor
-description: Execute implementation plans in batches with review checkpoints and educational validation for Flutter LG projects.
+description: Execute implementation plans step-by-step. MUST follow SOLID/DRY principles and reuse existing code.
 ---
 
 # Executing Flutter LG Plans
 
-## Overview
+**Announce at start:** "I'm using lg-flutter-exec to implement [Feature Name] step by step."
 
-Execute implementation plans in batches. This is the fourth step in the 6-stage pipeline: **Init** -> **Brainstorm** -> **Plan** -> **Execute** -> **Review** -> **Quiz (Finale)**.
+---
 
-**⚠️ PROMINENT GUARDRAIL**: Do not be a "coding robot." If the student stops participating or just says "Go on," you **MUST** trigger the **Skeptical Mentor**.
+## CORE RULES
 
-**Announce at start:** "I'm using the lg-flutter-exec skill to implement the [Feature Name] plan."
+### Rule 1: Step-by-Step Execution
+Execute **ONE task at a time**. After each task:
+1. Show what was built
+2. Show test result
+3. Wait for confirmation before next task
 
-## The Process
+Executing multiple tasks without stopping is FORBIDDEN.
 
-### Step 1: Load and Review Plan
+### Rule 2: SOLID Principles are Mandatory
 
-1. Read the plan file in `docs/plans/`.
-2. **Critical Review**: Identify questions about the architecture or Riverpod patterns.
-3. **Flutter Context**: Ensure the proposed names and structures follow project conventions.
-4. If concerns: Raise them with the student before starting.
+| Principle | Requirement |
+|-----------|-------------|
+| Single Responsibility | Each class does ONE thing |
+| Open/Closed | Extend, do not modify existing code |
+| Liskov Substitution | Implementations match interfaces |
+| Interface Segregation | Small, focused interfaces |
+| Dependency Inversion | Depend on abstractions, not implementations |
 
-### Step 2: Execute Batch
+Violating any SOLID principle is FORBIDDEN.
 
-**Default: Execute tasks in batches of 2-3.**
+### Rule 3: DRY is Mandatory
 
-For each task in the batch:
+Before writing ANY code, check:
+- Does this logic already exist in the Starter Kit?
+- Can I reuse an existing class or method?
 
-1. Mark as `in_progress`.
-2. Follow the steps exactly (Logic → Implementation → Verification).
-3. **Educational Check**: Briefly explain why this specific task is necessary.
-4. Run verifications as specified:
-   - `flutter analyze` for static analysis
-   - `flutter test` for unit tests
-   - Hot reload on device/emulator for UI
-5. **Quality Check**: Ensure no analyzer warnings.
-6. Commit with a descriptive message: `feat: [task name]`.
+**If similar logic exists → REUSE IT. Do not recreate.**
 
-### Step 3: Educational Report
+### Rule 4: Reuse Existing Components
 
-When a batch is complete, report back with:
+**ALWAYS check these before creating new code:**
 
-- **What was built**: A summary of the changes.
-- **Verification Result**: Console outputs or screenshots showing it works.
-- **Engineering Principles**: Mention which principle was applied (e.g., "I applied Separation of Concerns by keeping SSH logic in the service layer").
-- **Device Check**: How does it look on the tablet emulator?
-- **Checklist**: Mark the completed tasks in the `docs/plans/` folder.
-- **Learning Journal**: Append this educational report to `docs/learning-journal.md`.
+| Need | Check First |
+|------|-------------|
+| SSH execution | `SSHService.execute()` |
+| FlyTo | `FlyToLocationUseCase` |
+| Orbit | `OrbitLocationUseCase` |
+| Reboot/Relaunch | `RebootLgUseCase`, `RelaunchLgUseCase` |
+| Credentials | `LocalStorageSource` |
+| LG Commands | `LGRepositoryImpl` methods |
 
-### Step 4: Continue
+Creating duplicate functionality is FORBIDDEN.
 
-- Ask: "Ready for the next batch? Does the architecture still make sense to you?"
-- Execute next batch until complete.
+---
 
-### Step 5: Final Review & Completion
+## Execution Process
 
-After all tasks are complete:
+### For Each Task:
 
-1. Perform a final device test (connect to LG if possible, or use mock).
-2. Finalize the `docs/plans/` document by marking it as complete.
-3. **Review Handoff**: Ask: "Feature implementation is complete. Ready for a professional Code Review?"
-4. Use the **Liquid Galaxy Flutter Code Reviewer** to perform the final quality audit.
+1. **Check for Reuse**
+   - Search existing code for similar functionality
+   - If found → extend or reuse
+   - If not found → create new
 
-## When to Stop and Ask for Help
+2. **Implement**
+   - Follow SOLID principles
+   - Use existing interfaces
+   - Extend, do not duplicate
 
-- Hit a blocker (SSH connection issues, unclear instruction).
-- Plan has logic gaps.
-- Verification fails repeatedly.
-- **Don't guess—ask for clarification.**
+3. **Write Test**
+   - Domain entities → direct tests, no mocks
+   - Everything else → use mocks
 
-## Remember
+4. **Verify**
+   ```bash
+   flutter analyze   # MUST pass
+   flutter test <specific_test>   # MUST pass
+   ```
 
-- Review critically first.
-- **SSH is the bridge**: All LG commands must go through the SSH service.
-- Report engineering principles after every batch.
-- **Guardrail**: If the student asks for too much automation, call in the **Skeptical Mentor**.
-- Stop when blocked.
+5. **Report and Wait**
+   - Show what was built
+   - Show test result
+   - Ask: "Ready for next task?"
+
+6. **Commit**
+   ```bash
+   git add .
+   git commit -m "feat(<scope>): <description>"
+   ```
+
+---
+
+## Verification Before Handoff
+
+Before moving to Code Review:
+
+1. Run full test suite
+   ```bash
+   flutter test
+   ```
+
+2. Verify no duplicated logic exists
+3. Verify all SOLID principles followed
+4. Call Skeptical Mentor for validation question
+
+---
+
+## Phase Enforcement
+
+The execution phase CANNOT be skipped.
+The quiz phase MUST follow code review.
+Each phase MUST complete before the next begins.
+
+---
+
+## Handoff
+
+## 🏁 Phase 4: Execution Completion & Handoff
+
+When all tasks in the plan are marked `[x]`:
+
+1. **Final Verification**: Ask the user to run the app one last time.
+   ```bash
+   flutter analyze
+   flutter test
+   ```
+
+2. **The "LG Degree" Pitch**:
+   - You MUST say: "🎉 Fantastic work! You've successfully built the **[Feature Name]**. The code looks solid and all tests are passing."
+   - **The Hook**: "Now, are you ready to earn your **'Liquid Galaxy Developer Degree'**? I have a challenge prepared to test your mastery of what we just built. It's your chance to prove you truly understand the architecture and patterns we used!"
+   
+3. **Transition**:
+   - If they say **YES**: "Excellent! Let me prepare your certification challenge..." → Invoke `lg-flutter-quiz-master`.
+   - If they say **NO** (or want code review first): "No problem! Let's do a thorough code review first to make sure everything is perfect." → Invoke `lg-flutter-code-reviewer`.
+   - If they ask what the quiz involves: "It's 5 conceptual questions about the architecture, patterns, and LG-specific concepts we used. No coding required—just your understanding!"

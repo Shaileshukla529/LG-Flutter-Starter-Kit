@@ -12,7 +12,7 @@ class RebootLgUseCase {
 class RelaunchLgUseCase {
   final LGRepository repository;
   RelaunchLgUseCase(this.repository);
-  
+
   Future<void> call() => repository.relaunch();
 }
 
@@ -24,27 +24,19 @@ class ShutdownLgUseCase {
   Future<bool> call() => repository.shutdownAll();
 }
 
-/// Use case for cleaning query.txt
-class CleanKmlUseCase {
+/// Use case for cleaning navigation query
+class ClearNavigationUseCase {
   final LGRepository repository;
-  CleanKmlUseCase(this.repository);
-  
-  Future<void> call() => repository.cleanKML();
-}
+  ClearNavigationUseCase(this.repository);
 
-/// Use case for cleaning slave screens
-class CleanSlavesUseCase {
-  final LGRepository repository;
-  CleanSlavesUseCase(this.repository);
-  
-  Future<void> call() => repository.cleanSlaves();
+  Future<void> call() => repository.clearNavigation();
 }
 
 /// Use case for cleaning all KML content
 class CleanAllKmlUseCase {
   final LGRepository repository;
   CleanAllKmlUseCase(this.repository);
-  
+
   Future<void> call() => repository.cleanAllKml();
 }
 
@@ -52,7 +44,7 @@ class CleanAllKmlUseCase {
 class SendLogoUseCase {
   final LGRepository repository;
   SendLogoUseCase(this.repository);
-  
+
   Future<void> call() => repository.sendLogo();
 }
 
@@ -60,6 +52,6 @@ class SendLogoUseCase {
 class CleanLogoUseCase {
   final LGRepository repository;
   CleanLogoUseCase(this.repository);
-  
+
   Future<void> call() => repository.cleanLogo();
 }

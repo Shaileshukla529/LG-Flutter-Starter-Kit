@@ -199,6 +199,39 @@ class SshService {
     }
   }
 
+  /// Upload binary data (e.g., images) to remote path via SFTP.
+  /// Used for uploading logo images to /var/www/html/
+  Future<void> uploadBytesViaSftp(Uint8List bytes, String remotePath) async {
+    if (!_hasCredentials) {
+      throw Exception('SSH not connected. Please connect first.');
+    }
+
+    try {
+      if (_client == null || _client!.isClosed) {
+        await _establishConnection();
+      }
+
+      final sftp = await _client!.sftp();
+
+      final file = await sftp.open(
+        remotePath,
+        mode: SftpFileOpenMode.create |
+            SftpFileOpenMode.truncate |
+            SftpFileOpenMode.write,
+      );
+
+      await file.write(Stream.fromIterable([bytes]));
+      await file.close();
+
+      _isHealthy = true;
+      print('SFTP Binary Upload successful: $remotePath');
+    } catch (e) {
+      print('SFTP Binary Upload Error: $e');
+      _isHealthy = false;
+      rethrow;
+    }
+  }
+
   /// Dispose method to clean up resources
   void dispose() {
     _stopHealthCheck();

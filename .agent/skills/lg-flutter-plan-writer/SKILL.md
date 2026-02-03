@@ -1,112 +1,117 @@
 ---
 name: Liquid Galaxy Flutter Plan Writer
-description: Write comprehensive implementation plans that guide students through building features for Flutter LG Controllers.
+description: Create implementation plans. Each phase MUST complete before the next. Skeptical Mentor validates transitions.
 ---
 
 # Writing Flutter LG Implementation Plans
 
-## Overview
+**Announce at start:** "I'm using lg-flutter-plan-writer to create your implementation plan."
 
-Write comprehensive implementation plans that guide students through building features for the Liquid Galaxy. This is the third step in the 6-stage pipeline: **Init** -> **Brainstorm** -> **Plan** -> **Execute** -> **Review** -> **Quiz (Finale)**.
+---
 
-**⚠️ PROMINENT GUARDRAIL**: The **Skeptical Mentor** is your educational partner. If the student fails the Educational Verification phase below, call the mentor immediately.
+## CORE RULES
 
-**Announce at start:** "I'm using the lg-flutter-plan-writer skill to create your implementation plan."
+### Rule 1: Phase Order is Fixed
+Init → Brainstorm → **Plan** → Execute → Review → Quiz
 
-**Save plans to:** `docs/plans/YYYY-MM-DD-<feature-name>-plan.md`
+Skipping any phase is FORBIDDEN.
 
-## Bite-Sized Task Granularity
+### Rule 2: Transition Requires Validation
+Before moving to Execute phase:
+1. Plan MUST be complete
+2. Student MUST pass Skeptical Mentor validation
+3. Both conditions MUST be true
 
-Each step should be a single, logical action taking 5-10 minutes. This helps students stay focused and allows for frequent verification.
+### Rule 3: Plans Must Reference Existing Code
+Every plan MUST identify:
+- Existing components to reuse
+- Existing interfaces to implement
+- Why new code is needed (if any)
 
-- **Visual Flow**: Implement provider → Test with print → Build widget → Verify on device.
-- **Commit Often**: Every task should end with a git commit.
+---
 
-## Plan Document Header
+## Plan Document Structure
 
-Every plan **MUST** start with this header:
+Create: `docs/plans/YYYY-MM-DD-<feature>-plan.md`
 
 ```markdown
-# [Feature Name] Implementation Plan
+# [Feature] Implementation Plan
 
-**Goal:** [One sentence describing what this builds]
-
-**Architecture:** [2-3 sentences about the approach, specifically mentioning Clean Architecture layers]
-
-**Tech Stack:** [e.g. Riverpod, dartssh2, google_maps_flutter]
-
-**Educational Objectives:** [What engineering principles will the student learn?]
+**Goal**: [One sentence]
+**Layers Affected**: domain / data / ui
 
 ---
 
-## 🗺️ Implementation Checklist
-- [ ] Task 1: [Short Title]
-- [ ] Task 2: [Short Title]
-- [ ] ...
+## Reuse Check
+**Existing components to use:**
+- [List existing classes/methods]
+
+**New components needed:**
+- [List new classes with justification]
 
 ---
+
+## Checklist
+- [ ] Task 1: [title]
+- [ ] Task 2: [title]
+...
+
+---
+
+## Tasks
+[Details below]
 ```
+
+---
 
 ## Task Structure
 
-````markdown
-### Task N: [Component/Logic Name]
+Each task:
+
+```markdown
+### Task N: [Name]
 
 **Files:**
+- Reuse: [existing files]
+- Create: [new files]
+- Test: [test file]
 
-- Create: `lib/features/<feature>/data/<file>.dart`
-- Modify: `lib/features/<feature>/presentation/<widget>.dart`
-- Test: `test/<feature>/<test_file>_test.dart`
+**What to Build:**
+[Specific implementation details]
 
-**Step 1: Architectural Definition**
-Briefly explain _why_ we are touching these files.
+**Test:**
+[What the test verifies]
 
-**Step 2: Define Logic/Interface**
-Write out the specific code.
-
-```dart
-// Example: lib/features/connection/providers/connection_provider.dart
-final connectionProvider = StateNotifierProvider<ConnectionNotifier, LgConnectionState>((ref) {
-  return ConnectionNotifier(ref);
-});
+**Verification:**
+1. flutter analyze — zero warnings
+2. flutter test [path] — pass
 ```
 
-**Step 3: Verification/Testing**
-How does the student know it works?
+---
 
-- **Analyze**: "Run `flutter analyze` to check for errors."
-- **Test**: "Run `flutter test` to verify logic."
-- **Device**: "Hot reload and verify on tablet emulator."
+## Validation Before Execution
 
-**Step 4: Commit**
+After plan is complete:
 
-```bash
-git add .
-git commit -m "feat: [brief description]"
-```
-````
+1. **Self-Check:**
+   - Are all SOLID principles considered?
+   - Is DRY followed (no duplicated logic)?
+   - Are existing components reused?
 
-## Engineering Principles to Enforce
+2. **Skeptical Mentor Validation:**
+   - Ask ONE architecture question
+   - Correct answer → proceed to Execute
+   - Wrong answer → return to Brainstorm
 
-- **Clean Architecture**: Domain layer stays independent of Flutter.
-- **Separation of Concerns**: UI in `presentation/`, logic in `domain/`, data in `data/`.
-- **Riverpod Best Practices**: Use proper provider types for each use case.
-- **Security**: Credentials in `flutter_secure_storage`, never in code.
+---
 
-## 🎓 Educational Verification Phase
+## Handoff
 
-Before starting the implementation, you **MUST** conduct a short verification dialogue:
+Checklist before handoff:
+- [ ] Plan document complete
+- [ ] Reuse check complete
+- [ ] Skeptical Mentor passed
 
-**Ask the following types of questions:**
-1. **Architecture Check**: "Why are we putting connection logic in a provider instead of the widget?"
-2. **Security Trade-offs**: "What would happen if we stored the SSH password in SharedPreferences?"
-3. **SSH Flow**: "Walk me through what happens when the user taps 'Connect to LG'."
-4. **Riverpod Patterns**: "Why are we using StateNotifierProvider instead of StateProvider here?"
+Then ask: "Plan ready. Shall we start execution?"
 
-**Requirement**: Do not proceed to execution until the student provides reasonable answers.
-
-## Execution Handoff
-
-After saving the plan and completing the **Educational Verification Phase**:
-
-**"Plan complete and saved to `docs/plans/<filename>.md`. After our discussion, I'll use the Liquid Galaxy Flutter Plan Executor to start Task 1. Ready?"**
+Invoke `lg-flutter-exec`

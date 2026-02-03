@@ -177,6 +177,16 @@ class MockLGRepository extends _i1.Mock implements _i2.LGRepository {
       ) as _i3.Future<void>);
 
   @override
+  _i3.Future<void> sendKmlToMaster(String? kmlContent) => (super.noSuchMethod(
+        Invocation.method(
+          #sendKmlToMaster,
+          [kmlContent],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
   _i3.Future<void> cleanAllKml() => (super.noSuchMethod(
         Invocation.method(
           #cleanAllKml,
@@ -187,9 +197,9 @@ class MockLGRepository extends _i1.Mock implements _i2.LGRepository {
       ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> cleanKML() => (super.noSuchMethod(
+  _i3.Future<void> clearNavigation() => (super.noSuchMethod(
         Invocation.method(
-          #cleanKML,
+          #clearNavigation,
           [],
         ),
         returnValue: _i3.Future<void>.value(),
@@ -197,30 +207,12 @@ class MockLGRepository extends _i1.Mock implements _i2.LGRepository {
       ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> sendCommand(String? cmd) => (super.noSuchMethod(
-        Invocation.method(
-          #sendCommand,
-          [cmd],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-
-  @override
-  _i3.Future<void> sendLogo() => (super.noSuchMethod(
+  _i3.Future<void> sendLogo({String? assetPath = 'image/logo.png'}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #sendLogo,
           [],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-
-  @override
-  _i3.Future<void> sendAssetLogo(String? assetPath) => (super.noSuchMethod(
-        Invocation.method(
-          #sendAssetLogo,
-          [assetPath],
+          {#assetPath: assetPath},
         ),
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),
@@ -289,36 +281,6 @@ class MockLGRepository extends _i1.Mock implements _i2.LGRepository {
         Invocation.method(
           #forceRefresh,
           [screenNumber],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-
-  @override
-  _i3.Future<void> cleanSlaves() => (super.noSuchMethod(
-        Invocation.method(
-          #cleanSlaves,
-          [],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-
-  @override
-  _i3.Future<void> showImages(String? kmlpath) => (super.noSuchMethod(
-        Invocation.method(
-          #showImages,
-          [kmlpath],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-
-  @override
-  _i3.Future<void> drawPolygon(String? kmlpath) => (super.noSuchMethod(
-        Invocation.method(
-          #drawPolygon,
-          [kmlpath],
         ),
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),

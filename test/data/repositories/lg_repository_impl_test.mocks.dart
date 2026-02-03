@@ -4,12 +4,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
+import 'dart:typed_data' as _i4;
 
 import 'package:lg_flutter_stater_kit/data/datasources/local_storage_source.dart'
-    as _i4;
+    as _i5;
 import 'package:lg_flutter_stater_kit/data/datasources/ssh_service.dart' as _i2;
 import 'package:lg_flutter_stater_kit/domain/entities/connection_entity.dart'
-    as _i5;
+    as _i6;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -108,6 +109,23 @@ class MockSshService extends _i1.Mock implements _i2.SshService {
       ) as _i3.Future<void>);
 
   @override
+  _i3.Future<void> uploadBytesViaSftp(
+    _i4.Uint8List? bytes,
+    String? remotePath,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #uploadBytesViaSftp,
+          [
+            bytes,
+            remotePath,
+          ],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
   void dispose() => super.noSuchMethod(
         Invocation.method(
           #dispose,
@@ -121,13 +139,13 @@ class MockSshService extends _i1.Mock implements _i2.SshService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockLocalStorageDataSource extends _i1.Mock
-    implements _i4.LocalStorageDataSource {
+    implements _i5.LocalStorageDataSource {
   MockLocalStorageDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<void> saveSettings(_i5.ConnectionEntity? connection) =>
+  _i3.Future<void> saveSettings(_i6.ConnectionEntity? connection) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveSettings,
@@ -138,13 +156,13 @@ class MockLocalStorageDataSource extends _i1.Mock
       ) as _i3.Future<void>);
 
   @override
-  _i3.Future<_i5.ConnectionEntity?> loadSettings() => (super.noSuchMethod(
+  _i3.Future<_i6.ConnectionEntity?> loadSettings() => (super.noSuchMethod(
         Invocation.method(
           #loadSettings,
           [],
         ),
-        returnValue: _i3.Future<_i5.ConnectionEntity?>.value(),
-      ) as _i3.Future<_i5.ConnectionEntity?>);
+        returnValue: _i3.Future<_i6.ConnectionEntity?>.value(),
+      ) as _i3.Future<_i6.ConnectionEntity?>);
 
   @override
   _i3.Future<void> clearSettings() => (super.noSuchMethod(

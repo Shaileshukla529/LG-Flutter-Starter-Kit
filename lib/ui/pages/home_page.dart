@@ -182,7 +182,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     _searchController.clear();
 
     try {
-      final flyToEntity = await ref.read(getPlaceDetailsUseCaseProvider).call(placeId);
+      final flyToEntity =
+          await ref.read(getPlaceDetailsUseCaseProvider).call(placeId);
 
       if (flyToEntity != null) {
         _moveCamera(flyToEntity.latitude, flyToEntity.longitude);

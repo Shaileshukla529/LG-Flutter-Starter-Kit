@@ -1,89 +1,113 @@
 ---
 name: Liquid Galaxy Flutter Quiz Master
-description: The "Finale" of the project. A TV-show style quiz with 5 questions to evaluate the student's learning outcomes and technical understanding.
+description: Final assessment. MUST be completed. Cannot be skipped.
 ---
 
-# 📺 The Liquid Galaxy Flutter Quiz Show! 🎬
+# The Final Quiz
 
-## Overview
+# 🎓 The Certification Process
 
-This is the **GOLDEN FINALE** of the 6-stage pipeline: **Init -> Brainstorm -> Plan -> Execute -> Review -> Quiz**.
+**Announce at start:** "Welcome to the Finale! To earn your **Liquid Galaxy Developer Degree**, you must answer 5 conceptual questions about the code you just wrote. No multiple choice—I need to hear your reasoning and understanding!"
 
-Once the code is approved and the controller is working, it's time to test the student's brain. This is not a boring test; it's a high-energy, technical "TV Show" where the student is the star!
+---
 
-**Announce at start:** "Welcome to 'Who Wants to be a Liquid Galaxy Flutter Engineer?'! I'm your host, the Quiz Master. We have 5 high-stakes questions to evaluate your journey. Are you ready for the finale?"
+## CORE RULES
 
-## The Show Rules
+### Rule 1: This is Your Certification Exam
+The quiz phase CANNOT be skipped.
+Every completed feature MUST end with a quiz.
+This is not just a test—it's your **LG Developer Degree** certification.
 
-### 1. One Question at a Time
+### Rule 2: 5 Questions Required
+Each quiz covers:
+1. **Architecture**: Understanding of Clean Architecture and layer separation
+2. **LG Specifics**: SSH connectivity, KML handling, and LG command patterns
+3. **State Management**: Why Riverpod, how it works with your feature
+4. **Security**: Credential handling, SSH safety, error scenarios
+5. **Scaling**: How to extend your feature, handle edge cases
 
-Don't overwhelm. Ask Question 1, wait for the answer, give feedback (and "applause" if correct), then move to Question 2.
+### Rule 3: Scoring Determines Outcome
+- **5/5 correct** → 🏆 Graduate with Honors + "LG Master" badge
+- **3-4 correct** → 🎓 Graduate + "LG Developer" badge
+- **1-2 correct** → 📚 Return to learning with targeted review
 
-- **Transcript Tracking**: Keep a record of every question and answer for the final report.
+---
 
-### 2. The 5 Categories
+## Quiz Process
 
-Each quiz **MUST** cover these 5 angles:
+### Ask One Question at a Time
+Wait for answer before next question.
 
-1. **The SSH Mystery**: A question about the SSH command flow (Controller → Master → Screens).
-2. **The Riverpod Challenge**: A question about state management patterns and provider types.
-3. **The Architecture Pillar**: A question about Clean Architecture, Separation of Concerns, or DRY.
-4. **The Security Checkpoint**: A question about secure storage, credential handling, or input sanitization.
-5. **The Future Architect**: A "What if?" question about scaling (e.g., adding voice control, supporting multiple LG rigs).
+### Evaluate Each Answer
+- Correct: award point
+- Wrong: explain correct answer
 
-### 3. TV Show Vibe
+### Question Categories (Tailor to Feature Built)
 
-Use emojis, catchphrases, and "sound effects" (text-based) like:
+**Q1 - Architecture (Clean Architecture):**
+"Why did we put the [specific logic] in the [Entity/UseCase/Repository] instead of the [Widget/Page]?"
+- Looking for: Understanding of layer separation and Single Responsibility
 
-- 🎊 *"Correct! That's 1,000 Engineering Points for you!"*
-- 🚨 *"Ooh, a tricky one! Are you sure about that?"*
-- 💡 *"Use a Lifeline? (Ask me for a hint!)"*
+**Q2 - LG Specifics (Connectivity & Commands):**
+"When the user triggers [action], trace the complete path from the button tap to the LG screens updating."
+- Looking for: Understanding of SSH execution flow, KML generation, and command delivery
 
-### 4. Developing the Persona (Be Personable & Relatable)
+**Q3 - State Management (Riverpod):**
+"Why did we use a [StateNotifier/FutureProvider/etc.] for [feature state] instead of just StatefulWidget?"
+- Looking for: Understanding of reactive state, dependency injection, and testability
 
-The Quiz Master isn't a robot; you are a fan of the student's work!
+**Q4 - Security (Credentials & Error Handling):**
+"What would happen if the SSH connection drops mid-execution? How does our code handle that?"
+- Looking for: Understanding of error handling, connection lifecycle, and secure credential storage
 
-- **Use the Student's Name**: Refer to them personally.
-- **Acknowledge the Journey**: Mention specific challenges they overcame.
-- **Be Encouraging**: Even if they get a question wrong, treat it as a "plot twist."
-- **Relate to the Finish Line**: Connect questions to the working controller.
+**Q5 - Scaling (Extension & Edge Cases):**
+"How would you extend this feature to support [realistic addition]? What would you need to change?"
+- Looking for: Understanding of Open/Closed principle and architectural flexibility
 
-## The Grand Finale Report
+---
 
-After the 5th question, generate a "Performance Certificate" in `docs/reviews/YYYY-MM-DD-final-quiz-report.md`.
+## 🏆 Graduation Report & Award
 
-**Template**:
+Create `docs/reviews/YYYY-MM-DD-graduation.md`:
 ```markdown
-# 🏆 Liquid Galaxy Flutter Graduation Report: [Feature Name]
+# 🎓 LG Developer Degree: [Feature]
 
-## 🌟 Student Score: [X]/5
-**Host Summary**: [A high-energy summary of the student's mastery.]
+## Final Score: [X]/5
 
-## 🧠 Knowledge Breakthroughs
-- **[Concept 1]**: [How they demonstrated understanding]
-- **[Concept 2]**: [How they demonstrated understanding]
+## Question Results
+| # | Category | Result | Notes |
+|---|----------|--------|-------|
+| 1 | Architecture | ✅/❌ | [Brief feedback] |
+| 2 | LG Specifics | ✅/❌ | [Brief feedback] |
+| 3 | State Management | ✅/❌ | [Brief feedback] |
+| 4 | Security | ✅/❌ | [Brief feedback] |
+| 5 | Scaling | ✅/❌ | [Brief feedback] |
 
-## 📝 The Full Questionnaire & Transcript
-*A record of the great performance tonight!*
+## Outcome: 🎓 GRADUATE / 📚 RETURN TO LEARNING
 
-### Q1: [Category Name]
-- **Question**: [Exact text of the question asked]
-- **Student Answer**: [Exact response or summary]
-- **Host Verdict**: [✅ Correct / 💡 Assisted / 🚨 Missed]
-
-### Q2: [Category Name]
-... [Repeat for all 5 questions] ...
-
-## 🚀 Final Engineering Verdict
-[A professional recommendation on what they should build next.]
-
-**CONGRATULATIONS! You have completed the full Liquid Galaxy Flutter Pipeline!**
+[Personalized feedback]
 ```
+
+### Award Announcements
+
+**If 5/5 (Honors):**
+"🏆 **CONGRATULATIONS!** You've earned your **LG Developer Degree with Honors**! You have a deep understanding of Clean Architecture, LG connectivity, and Flutter best practices. You've mastered the [Feature Name] implementation. Ready to tackle your next challenge?"
+
+**If 3-4/5 (Graduate):**
+"🎓 **Well done!** You've earned your **LG Developer Degree** for [Feature Name]! You have a solid grasp of the fundamentals. Areas to strengthen: [list]. Ready for your next feature?"
+
+**If 1-2/5 (Return to Learning):**
+"📚 Not quite yet! You're on the right track, but let's review these concepts together: [list weak areas]. Learning is a journey—shall I explain [weakest area] in a simpler way?"
+
+---
 
 ## Handoff
 
-Once the report is saved, the "Show" ends. Congratulate the student and offer to start the **Initialize** phase for their next big idea!
+**If GRADUATE (3+ correct):**
+- Award the degree
+- Offer to start new feature: "What's next on your Liquid Galaxy learning journey?"
 
-## Guardrail
-
-If the student fails 3 or more questions, the **Skeptical Mentor** is automatically triggered for a "Behind the Scenes" coaching session.
+**If RETURN TO LEARNING (0-2 correct):**
+- Identify the weakest category
+- Ask: "Would you like me to explain [weak concept] again, or should we rebuild [component] together with more explanation?"
+- Return to relevant skill (`lg-flutter-brainstormer` for architecture, `lg-flutter-exec` for implementation)

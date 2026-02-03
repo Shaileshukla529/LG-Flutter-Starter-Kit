@@ -1,83 +1,81 @@
 ---
 name: Liquid Galaxy Flutter Code Reviewer
-description: The final gatekeeper for quality. Use after a feature implementation is finished to ensure Flutter best practices, performance, and architectural purity.
+description: Final quality audit. Verifies SOLID/DRY compliance and test coverage.
 ---
 
-# The Flutter Code Reviewer 🧐
+# Code Review
 
-## Overview
+**Announce at start:** "I'm starting code review for [Feature Name]."
 
-This is the fifth step in the 6-stage pipeline: **Init -> Brainstorm -> Plan -> Execute -> Review -> Quiz (Finale)**. Its goal is to simulate a professional code review, ensuring the code is not just "working," but "excellent."
+---
 
-**Announce at start:** "I'm starting a professional Code Review for the [Feature Name] implementation."
+## CORE RULES
 
-## The Review Process
+### Rule 1: Automated Checks Must Pass
+```bash
+flutter analyze       # zero errors
+flutter test          # all pass
+```
+If either fails → return to execution.
 
-### 1. Holistic Quality Check
+### Rule 2: SOLID Compliance Required
+Check each principle:
+- Single Responsibility: one purpose per class
+- Open/Closed: extended, not modified
+- Dependency Inversion: abstractions used
 
-Review the entire feature set for:
+### Rule 3: DRY Compliance Required
+Check for:
+- Duplicated logic
+- Recreated functionality
+- Copied code
 
-- **Clean Architecture**: Are layers properly separated? Is domain independent?
-- **Riverpod Patterns**: Are we using the correct provider types?
-- **DRY Compliance**: Did we copy-paste logic that should be in a service?
-- **Naming**: Are variable and class names descriptive and consistent?
+Any duplication → return to execution.
 
-### 2. Technical Tooling Audit (Mandatory)
+### Rule 4: Existing Code Reused
+Verify that:
+- Existing services were used
+- Existing interfaces were implemented
+- No unnecessary new abstractions
 
-You **MUST** run and verify the results of:
+---
 
-- **Analysis**: Run `flutter analyze`. There should be zero errors or warnings.
-- **Tests**: Run `flutter test`. All unit tests must pass.
-- **Coverage**: Run `flutter test --coverage`. New logic should have at least **80% coverage**.
+## Review Process
 
-### 3. Flutter/LG Specific Audit
+1. Run automated checks
+2. Verify SOLID compliance
+3. Verify DRY compliance
+4. Check reuse of existing code
+5. Create review report
 
-- **SSH Lifecycle**: Is the SSH client properly disposed? Are we handling disconnects?
-- **Secure Storage**: Are credentials stored in `flutter_secure_storage`, not SharedPreferences?
-- **State Management**: Are we avoiding unnecessary rebuilds? Using `select` where appropriate?
-- **Memory Safety**: Are we disposing controllers and streams properly?
+---
 
-### 4. Documentation & Readiness
+## Review Report
 
-- **Dart Docs**: Does every public function have a proper doc comment?
-- **README**: Does the project README explain how to use this feature?
-- **Readability**: Could a new student understand this code in 5 minutes?
-
-## The Review Report
-
-Write the review results to `docs/reviews/YYYY-MM-DD-<feature>-review.md`.
-
-**Template**:
+Create `docs/reviews/YYYY-MM-DD-<feature>-review.md`:
 ```markdown
-# Code Review: [Feature Name]
+# Code Review: [Feature]
 
-## 🟢 The Good
-- [List strengths, e.g., "Excellent use of StateNotifierProvider for connection state."]
+## Automated Checks
+- flutter analyze: PASS/FAIL
+- flutter test: PASS/FAIL
 
-## 🛠 Tooling & Quality Status
-- **Analyze**: [PASS/FAIL]
-- **Tests**: [PASS/FAIL]
-- **Coverage**: [X]% (Target: 80%)
+## SOLID Compliance: PASS/FAIL
 
-## 🟡 Required Refactors (Gated)
-- [List items the student MUST fix before 'merging'.]
-- **Note**: A "FAIL" in any mandatory tool above is an automatic Required Refactor.
+## DRY Compliance: PASS/FAIL
 
-## 🔵 Best Practice Suggestions
-- [List minor improvements for the future.]
-
-## Final Verdict: [APPROVED / REVISIONS NEEDED]
-*(A feature can only be APPROVED if all 3 Tools are in PASS state)*
+## Verdict: APPROVED / NEEDS REVISION
 ```
 
-## Guardrail: The Revision Loop
+---
 
-If **REVISIONS NEEDED**, hand back to the **Plan Writer** or **Executor** to fix the issues. Do not consider the feature "Complete" until the review is **APPROVED**.
+## Handoff
 
-## Final Completion
+If APPROVED:
+1. Skeptical Mentor validation
+2. Ask: "Ready for the quiz?"
+3. Invoke `lg-flutter-quiz-master`
 
-Once **APPROVED**:
-
-- Suggest a final commit: `chore: final polish after code review`.
-- **Finale Handoff**: Ask: "You've built and polished an incredible feature. Are you ready for the 'Liquid Galaxy Quiz Show' to earn your final graduation report?"
-- Use the **Liquid Galaxy Flutter Quiz Master** to start the show.
+If NEEDS REVISION:
+1. List specific issues
+2. Return to `lg-flutter-exec`

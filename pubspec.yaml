@@ -39,6 +39,7 @@ dependencies:
   
   # 🎨 Icons
   cupertino_icons: ^1.0.6
+  equatable: ^2.0.8
 
 
 dev_dependencies:
@@ -52,4 +53,5 @@ flutter:
   uses-material-design: true
   assets:
     - .env
-    - assets/images/
+    - assets/image/
+    - assets/kml/

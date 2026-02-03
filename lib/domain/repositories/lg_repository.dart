@@ -45,31 +45,29 @@ abstract class LGRepository {
   /// Send KML content to a specific slave screen.
   Future<void> sendKmlToSlave(String kmlContent, int screen);
 
-  /// Clean all KML content from LG.
+  /// Send KML content to master.kml for synchronized display across all screens.
+  /// Use this for polygons, overlays, or any content that should show on all screens.
+  Future<void> sendKmlToMaster(String kmlContent);
+
+  /// Clean all KML content from LG (master.kml, all slave files, and navigation).
   Future<void> cleanAllKml();
 
-  /// Legacy: Clean query.txt
-  Future<void> cleanKML();
-
-  /// Legacy: Simple command execution
-  Future<void> sendCommand(String cmd);
+  /// Clear navigation query (flyto commands in /tmp/query.txt).
+  Future<void> clearNavigation();
 
   // ─────────────────────────────────────────────────────────────
   // VISUAL ELEMENTS (LOGO, OVERLAYS, TOURS)
   // ─────────────────────────────────────────────────────────────
 
-  /// Display app logo on the leftmost screen (hardcoded URL).
-  Future<void> sendLogo();
-
-  /// Display a logo from local assets on the leftmost screen.
-  /// [assetPath] should be relative to assets folder, e.g. 'images/logo.png'.
-  Future<void> sendAssetLogo(String assetPath);
+  /// Display app logo on the leftmost screen.
+  /// Uploads image from [assetPath] (relative to assets/) via SFTP,
+  /// then sends KML referencing it via HTTP.
+  Future<void> sendLogo({String assetPath = 'image/logo.png'});
 
   /// Clear logo from the leftmost screen.
   Future<void> cleanLogo();
 
   /// Send HTML content as a balloon overlay to the rightmost screen.
-  /// The HTML will be wrapped in a KML BalloonStyle.
   Future<void> sendHtmlOverlay(String htmlContent);
 
   /// Start an orbit animation (KML Tour) around a point of interest.
@@ -90,12 +88,4 @@ abstract class LGRepository {
 
   /// Force refresh a specific screen by toggling refresh interval.
   Future<void> forceRefresh(int screenNumber);
-
-  // ─────────────────────────────────────────────────────────────
-  // LEGACY / PLACEHOLDERS
-  // ─────────────────────────────────────────────────────────────
-
-  Future<void> cleanSlaves();
-  Future<void> showImages(String kmlpath);
-  Future<void> drawPolygon(String kmlpath);
 }

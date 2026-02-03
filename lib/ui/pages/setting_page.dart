@@ -269,9 +269,18 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 ),
                 _buildActionButton(
                   ref,
+                  label: 'Show Logo',
+                  icon: Icons.image,
+                  provider: sendLogoUseCaseProvider,
+                  // Teal (New)
+                  color: const Color(0xFFE0F2F1),
+                  iconColor: const Color(0xFF009688),
+                ),
+                _buildActionButton(
+                  ref,
                   label: 'Clean Logo',
                   icon: Icons.image_not_supported,
-                  provider: cleanSlavesUseCaseProvider,
+                  provider: cleanLogoUseCaseProvider,
                   // Blue (Info/Image)
                   color: const Color(0xFFE3F2FD),
                   iconColor: const Color(0xFF1A73E8),
@@ -293,6 +302,42 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   // Red (Danger)
                   color: const Color(0xFFFFEBEE),
                   iconColor: const Color(0xFFD32F2F),
+                ),
+                // Test polygon button
+                CustomActionButton(
+                  label: 'Test Polygon',
+                  icon: Icons.pentagon_outlined,
+                  color: const Color(0xFFEDE7F6),
+                  iconColor: const Color(0xFF673AB7),
+                  onPressed: () async {
+                    final connectionState = ref.read(connectionProvider);
+                    if (!connectionState.isConnected) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Not connected!')),
+                      );
+                      return;
+                    }
+                    try {
+                      // Load triangle KML from assets
+                      final kmlContent = await DefaultAssetBundle.of(context)
+                          .loadString('assets/kml/triangle.kml');
+                      // Send to master
+                      final repo = ref.read(lgRepositoryProvider);
+                      await repo.sendKmlToMaster(kmlContent);
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Triangle KML sent to master!'),
+                            backgroundColor: Color(0xFF673AB7),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error: $e')),
+                      );
+                    }
+                  },
                 ),
               ],
             ),

@@ -59,7 +59,8 @@ final connectToLgUseCaseProvider = Provider<ConnectToLgUseCase>((ref) {
   return ConnectToLgUseCase(repository);
 });
 
-final disconnectFromLgUseCaseProvider = Provider<DisconnectFromLgUseCase>((ref) {
+final disconnectFromLgUseCaseProvider =
+    Provider<DisconnectFromLgUseCase>((ref) {
   final repository = ref.watch(lgRepositoryProvider);
   return DisconnectFromLgUseCase(repository);
 });
@@ -88,14 +89,19 @@ final shutdownLgUseCaseProvider = Provider<ShutdownLgUseCase>((ref) {
   return ShutdownLgUseCase(repository);
 });
 
-final cleanKmlUseCaseProvider = Provider<CleanKmlUseCase>((ref) {
+final cleanKmlUseCaseProvider = Provider<CleanAllKmlUseCase>((ref) {
   final repository = ref.watch(lgRepositoryProvider);
-  return CleanKmlUseCase(repository);
+  return CleanAllKmlUseCase(repository);
 });
 
-final cleanSlavesUseCaseProvider = Provider<CleanSlavesUseCase>((ref) {
+final cleanLogoUseCaseProvider = Provider<CleanLogoUseCase>((ref) {
   final repository = ref.watch(lgRepositoryProvider);
-  return CleanSlavesUseCase(repository);
+  return CleanLogoUseCase(repository);
+});
+
+final sendLogoUseCaseProvider = Provider<SendLogoUseCase>((ref) {
+  final repository = ref.watch(lgRepositoryProvider);
+  return SendLogoUseCase(repository);
 });
 
 // ─────────────────────────────────────────────────────────────

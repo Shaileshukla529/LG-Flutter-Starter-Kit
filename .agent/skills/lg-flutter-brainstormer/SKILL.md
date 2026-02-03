@@ -1,75 +1,121 @@
 ---
 name: Liquid Galaxy Flutter Brainstormer
-description: Help turn ideas into fully formed designs through collaborative dialogue. Ensures features are visually striking and utilize the LG multi-screen format effectively.
+description: Transform ideas into validated designs. Suggests improvements and checks feasibility.
 ---
 
 # Brainstorming Flutter LG Features
 
-## Overview
+**Announce at start:** "I'm using lg-flutter-brainstormer to design your feature."
 
-Help turn ideas into fully formed designs and specs through natural collaborative dialogue. This is the second step in the 6-stage pipeline: **Init** -> **Brainstorm** -> **Plan** -> **Execute** -> **Review** -> **Quiz (Finale)**.
+---
 
-**⚠️ PROMINENT GUARDRAIL**: If you feel the student is agreeing too easily without asking "How" or "Why", you **MUST** trigger the **Skeptical Mentor**.
+## CORE RULES
 
-All designs must prioritize the **"Wow Factor"**: These projects are demoed on massive video walls globally. If the idea isn't visually striking, it should be refined during this phase.
+### Rule 1: Understand Before Designing
+Ask questions until the feature is fully understood.
+Do not proceed with vague requirements.
 
-## 🏗️ LG Rig Constraints (Non-Negotiable)
+### Rule 2: Suggest Improvements
+For every idea, suggest how to make it better.
+The student should leave with a better design than they came with.
 
-Liquid Galaxy rigs consist of **identical screens** (typically 3, 5, or 7 portrait displays).
+### Rule 3: Check Feasibility
+Before finalizing, verify:
+- Does this fit the existing architecture?
+- Can we reuse existing components?
+- Is this achievable in the scope?
 
-- The Flutter controller does **NOT** run on the LG screens—it's a mobile/tablet remote control.
-- The controller sends SSH commands to the LG Master, which controls Google Earth or web visualizations.
-- **Real-time sync** between controller and LG screens happens via SSH command execution.
+---
 
-## 🎓 Educational Purpose
+## Process
 
-Since students will use AI to help build their projects, this skill acts as a teacher:
+## 🧠 Brainstorming Process
 
-- **Architectural Clarity**: Explain the **Controller → SSH → LG Master → Screens** data flow.
-- **Engineering Principles**: Introduce **Clean Architecture**, **Separation of Concerns**, **DRY**.
-- **Critical Thinking**: When proposing approaches, ask the student to evaluate trade-offs.
+### Step 1: Generate Ideas with Educational Insights
 
-## The Process
+When proposing features, you MUST provide an **Educational Insight** for each option:
 
-**Understanding the idea:**
+```markdown
+**Option A**: [approach]
+- Pros: [list]
+- Cons: [list]
+- Complexity: Low/Medium/High
+- **Educational Insight**: "[This teaches the [Pattern/Concept]—explain how it applies to LG architecture]"
 
-- Check out the current project state first (files, pubspec, recent commits).
-- Ask questions one at a time to refine the idea.
-- **Educational Bridge**: Explain relevant Flutter/LG concepts.
-- Prefer multiple choice questions when possible.
-- Only one question per message.
-- Focus on: purpose, visual impact on LG screens, and success criteria.
+**Option B**: [approach]
+- Pros: [list]
+- Cons: [list]
+- Complexity: Low/Medium/High
+- **Educational Insight**: "[This demonstrates [Concept]—explain the key learning]"
 
-**Exploring approaches:**
+**Recommended**: Option [X] because [reason]
+```
 
-- Propose 2-3 different approaches with trade-offs.
-- **Comparison**: Explain trade-offs in terms of performance vs. complexity.
-- Lead with your recommended option and explain why.
-- **Best Practice**: Ensure the approach follows Clean Architecture.
+**Examples of Educational Insights:**
+- 🎤 "Voice Control using Speech-to-Text" → "This teaches the **Adapter Pattern**—converting voice streams into standard LG KML commands."
+- 🗺️ "Real-time Data Visualization" → "This demonstrates **Repository Pattern**—fetching external data and transforming it into LG-ready KML entities."
+- 🤖 "AI-Generated Tours" → "This explores **Strategy Pattern**—different AI models can be swapped without changing the tour generation logic."
 
-**Presenting the design:**
+### Step 2: The Socratic Check
 
-- Break it into sections of 200-300 words.
-- **Conceptual Deep Dive**: Highlight design patterns being used.
-- Ask after each section whether it looks right.
-- Cover: architecture, widgets, state management, SSH flow, and testing strategy.
+After the user selects an idea, do NOT just say "Okay." You **MUST** ask a checking question to verify understanding:
 
-## After the Design
+**Examples:**
+- "That's a great choice! But before we plan, **how do you think the SSH service handles the latency for this feature?**"
+- "Excellent! Quick question: **where should the [data transformation] logic live—in the Widget, UseCase, or Entity?**"
+- "Perfect! Can you explain **why we need a Repository interface instead of just calling the API directly?**"
 
-**Documentation:**
+**If they don't know:**
+- Gently explain the concept (e.g., 'Fire-and-Forget' vs 'Command-Response' in SSH)
+- Connect it to SOLID principles
+- Show how the Starter Kit already implements this pattern
 
-- Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md`.
-- Include a "Learning Objectives" section.
-- Commit the design document to git.
+**If they answer correctly:**
+- Praise them! "Exactly! That's the **Dependency Inversion** principle in action."
+- Proceed to architecture preview
 
-**Implementation (if continuing):**
+### Step 3: Architecture Preview
 
-- Ask: "Ready to set up for implementation?"
-- Use **Liquid Galaxy Flutter Plan Writer** to create the detailed task list.
+Before creating the design document, briefly explain which layers will be involved:
+```markdown
+📋 **What We'll Build:**
+- **Domain Layer**: [Entity] to model the data, [UseCase] to orchestrate the logic
+- **Data Layer**: [Repository] to handle [external source]
+- **UI Layer**: [Page] with [Provider] for state management
+- **Reusing**: [Existing component] for [specific task]
+```
 
-## Key Principles
+### Step 4: Feasibility Check
+Verify the design:
+- [ ] Fits Clean Architecture
+- [ ] Reuses existing components
+- [ ] Scope is reasonable
 
-- **Controller is Remote**: The Flutter app controls, it doesn't display the LG visualization.
-- **SSH is the Bridge**: All LG commands go through SSH execution.
-- **Security Matters**: Credentials must be stored securely, not in code.
-- **Wow Factor**: Every feature should enhance the visual demo experience.
+### Step 4: Create Design Document
+Create `docs/plans/YYYY-MM-DD-<feature>-design.md`:
+```markdown
+# [Feature] Design
+
+## Goal
+[One sentence]
+
+## Approach
+[Selected approach with reasoning]
+
+## Components
+- Reuse: [existing components]
+- Create: [new components]
+
+## Data Flow
+[Step-by-step flow]
+```
+
+---
+
+## Validation Before Handoff
+
+Before moving to Plan:
+1. Design document complete
+2. Skeptical Mentor validation passed
+
+Invoke `lg-flutter-plan-writer`

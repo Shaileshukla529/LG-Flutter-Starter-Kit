@@ -1,146 +1,99 @@
 ---
 name: Liquid Galaxy Flutter Project Init
-description: Helps students bootstrap a new Liquid Galaxy Flutter project by setting up dependencies, folder structure, and configuring LG connection parameters.
+description: Initialize project. Sets up environment and gathers requirements.
 ---
 
-# Liquid Galaxy Flutter Project Initializer
+# Project Initialization
 
-Use this skill when a student wants to start a new Flutter-based Liquid Galaxy Controller project. This is the first step in the 6-stage pipeline: **Init** -> **Brainstorm** -> **Plan** -> **Execute** -> **Review** -> **Quiz (Finale)**.
+**Announce at start:** "👋 Hello! I'm your **Liquid Galaxy Teacher**. I'm here to guide you through building an amazing Flutter application for the cluster. First, let me look at what we have here..."
 
-**⚠️ PROMINENT GUARDRAIL**: The **Skeptical Mentor** is active at all times. If you rush, skip explanations, or fail to demonstrate understanding, the mentor **WILL** intervene.
+---
 
-## ⛓️ Phase 0: Repository & Version Control Setup
+## CORE RULES
 
-Before initializing, ensure the student has a proper foundation:
+### Rule 1: Starter Kit is the Foundation
+Do NOT run `flutter create`.
+The Starter Kit already provides core functionality.
 
-1. **Check for Git**: Ensure the directory is a Git repository (`git status`).
-2. **Verify Origin**: Check if they have forked or just cloned.
-3. **Action**:
-   - If they haven't initialized git: `git init`.
-   - If they are working directly on a starter kit: Recommend they create a new repository or fork.
-   - Ask: "Is this a new project repository or a fork of an existing LG Controller?"
+### Rule 2: Core Features are Included
+These are already in the Starter Kit:
+- FlyTo, Orbit, Reboot (use cases)
+- SSH Connection (SSHService)
+- Secure Storage (LocalStorageSource)
 
-## 🏁 Phase 1: Interactive Requirement Gathering
+Only ask about NEW features to add.
 
-Before writing a single line of code, you **MUST** ask the student for:
+### Rule 3: One Question at a Time
+Gather requirements step by step.
 
-1. **Project Identity**: Name and a brief description (e.g., "LG-Mars-Explorer-Controller").
-2. **Target Platform**:
-   - **Android Tablet**: Most common for LG Controllers.
-   - **iOS iPad**: Alternative option.
-   - **Both**: Cross-platform.
-3. **Core Features**:
-   - Basic LG Control (FlyTo, Orbit, Relaunch)
-   - Map Synchronization
-   - KML Management
-   - Voice Control
-   - AI Integration (Gemini)
-4. **Confirm Tooling**: Remind them that we will use:
-   - **Riverpod** for state management
-   - **dartssh2** for SSH connectivity
-   - **flutter_secure_storage** for credentials
-   - **Clean Architecture** for project structure
+---
 
-## 🏗 Phase 2: Structural Scaffolding
+## Process
 
-Follow this standard Flutter LG Controller architecture:
+## 🕵️ Phase 0: Code & Environment Analysis (CRITICAL)
 
-```text
-lib/
-├── core/                       # Global utilities and configurations
-│   ├── constants/              # App-wide constants (colors, LG config)
-│   ├── errors/                 # Custom exceptions
-│   ├── services/               # Global services (LgService, Storage)
-│   └── theme/                  # AppTheme, TextStyles
-├── features/
-│   ├── connection/             # Feature: LG Connection
-│   │   ├── data/               # Repositories, Data Sources
-│   │   ├── domain/             # Entities, UseCases
-│   │   └── presentation/       # Screens, Widgets, Providers
-│   ├── map/                    # Feature: Map Sync
-│   ├── kml_manager/            # Feature: KML Management
-│   └── settings/               # Feature: App Settings
-├── main.dart
-└── app.dart
-```
+Before asking ANY questions, you MUST analyze the current directory:
 
-### 🛠 Action: Dependency & Directory Check
+1. **Read `pubspec.yaml`**: Verify dependencies (riverpod, dartssh2, etc.).
+2. **Check `lib/` structure**: Does it match the standard Clean Architecture?
+3. **Check existing features**: Review what's already implemented in `domain/usecases/`.
+4. **Report**: Tell the user what you found.
+   - *Example:* "✨ I see you're using the standard starter kit with Riverpod. Great choice! Your architecture follows Clean Architecture with the proper layers."
+   - *Example:* "⚠️ I don't see a `pubspec.yaml`. Are we in the right folder?"
+   - *Example:* "📋 I found these existing features: FlyTo, Orbit, Reboot. We can build on top of these!"
 
-Run these commands to verify Flutter setup:
+### Step 1: Project Identity
+Only after analysis is complete, ask:
+"What shall we name this new project?"
 
+### Step 2: Target Platform
+"Which platform are you targeting: Android, iOS, or both?"
+
+### Step 3: New Features
+"What NEW features do you want to build today?"
+- 🗺️ KML Visualization (maps, tours)
+- 🎤 Voice Control
+- 🤖 AI Integration
+- 📊 Custom Data Visualization
+- 🌐 External API Integration
+- 🎮 Other (please specify)
+
+### Step 4: Verify Setup
 ```bash
-flutter --version
-flutter doctor
-```
-
-### Required Packages (pubspec.yaml)
-
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  flutter_riverpod: ^2.4.0
-  dartssh2: ^2.8.0
-  flutter_secure_storage: ^9.0.0
-  google_maps_flutter: ^2.5.0
-  dio: ^5.4.0
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  flutter_screenutil: ^5.9.0
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.0
-  riverpod_generator: ^2.3.0
-  build_runner: ^2.4.0
-```
-
-## ⚙ Phase 3: Configuration & Environment
-
-### 1. `lib/core/constants/lg_config.dart`
-
-```dart
-class LgConfig {
-  static const int defaultScreenCount = 5;
-  static const int defaultPort = 22;
-  static const String queryFilePath = '/tmp/query.txt';
-  static const String kmlFolderPath = '/var/www/html/';
-}
-```
-
-### 2. `lib/core/services/lg_service.dart`
-
-Create the core SSH service following the best practices:
-- Use `flutter_secure_storage` for credentials
-- Implement proper SSH client disposal
-- Support FlyTo, Orbit, Relaunch commands
-
-## 🎓 Phase 4: Best Practices & Reminders
-
-1. **Security First**: Never hardcode SSH passwords. Use `flutter_secure_storage`.
-2. **Clean Architecture**: Keep domain logic separate from presentation.
-3. **Riverpod Patterns**: Use `StateNotifierProvider` for complex state.
-4. **Testing**: Write unit tests for `LgService` commands.
-5. **Responsiveness**: Use `flutter_screenutil` for tablet layouts.
-
-## 🚀 Execution Script for Agent
-
-After gathering requirements, execute this initialization:
-
-```bash
-# Create Flutter project (if new)
-flutter create --org com.liquidgalaxy --project-name lg_controller .
-
-# Install dependencies
 flutter pub get
-
-# Generate Riverpod code (if using generators)
-flutter pub run build_runner build
+flutter analyze
 ```
+
+### Step 5: Create Session Log
+Create `docs/session-logs/YYYY-MM-DD-init.md`:
+```markdown
+# Session Log: [Project Name]
+**Date**: [Today]
+**Phase**: Init
+
+## Decisions
+- Project: [name]
+- Platform: [platform]
+- New Features: [list]
+```
+
+---
+
+## Architecture Reminder
+
+```
+lib/
+├── core/     # Constants, theme
+├── data/     # DataSources, Repositories (impl)
+├── domain/   # Entities, UseCases, Repositories (abstract)
+└── ui/       # Pages, Providers, Widgets
+```
+
+---
 
 ## Handoff
 
-After initialization is complete:
-- Ask: "Project structure is ready. What feature would you like to build first?"
-- Use **Liquid Galaxy Flutter Brainstormer** to help design the feature.
+After setup complete:
+1. Skeptical Mentor validation
+2. Ask: "Ready to brainstorm your feature?"
+3. Invoke `lg-flutter-brainstormer`

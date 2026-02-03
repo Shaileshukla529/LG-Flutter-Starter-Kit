@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Test Pyramid</name>
+    <LookAt>
+      <longitude>77.2295</longitude>
+      <latitude>28.6129</latitude>
+      <altitude>0</altitude>
+      <heading>0</heading>
+      <tilt>60</tilt>
+      <range>8000</range>
+    </LookAt>
+    <Style id="pyramidStyle">
+      <LineStyle>
+        <color>ff00ffff</color>
+        <width>2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>5000ffff</color>
+      </PolyStyle>
+    </Style>
+    <Placemark>
+      <name>Pyramid Base</name>
+      <styleUrl>#pyramidStyle</styleUrl>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              77.2250,28.6100,0
+              77.2340,28.6100,0
+              77.2340,28.6190,0
+              77.2250,28.6190,0
+              77.2250,28.6100,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Pyramid Side 1</name>
+      <styleUrl>#pyramidStyle</styleUrl>
+      <Polygon>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              77.2250,28.6100,0
+              77.2340,28.6100,0
+              77.2295,28.6145,1000
+              77.2250,28.6100,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+  </Document>
+</kml>
