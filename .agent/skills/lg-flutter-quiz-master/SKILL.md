@@ -51,20 +51,45 @@ Generate UNIQUE questions based on THEIR feature. Cover these categories:
 
 1. Ask question
 2. Listen for UNDERSTANDING, not memorization
-3. Correct → Track as ✅, move to next
-4. Wrong → Explain concept (~100 words), rephrase question, try again
+3. Correct → Track as ✅ (1.0 points), move to next
+4. Wrong → Follow Wrong Answer Protocol (below)
 
-**Track attempts** - wrong answers that get corrected still count toward score.
+### Wrong Answer Protocol
+When they get it wrong, this is a TEACHING MOMENT:
+
+1. **Acknowledge** their thinking (find what's partially right, be warm not dismissive)
+2. **Explain** properly (150-200 words):
+   - What the correct answer IS
+   - WHY it works that way (the underlying principle)
+   - What WOULD happen if done their way (consequences)
+   - Connect to something in THEIR code if possible
+3. **Rephrase** the question or ask simpler follow-up
+4. **Track** as ⚠️ Corrected (0.5 points) if they get it right on retry
+
+> **Intent**: Wrong answers are gold—they reveal gaps. Use them to teach, not just correct. Keep your personality (humor is fine!), but ensure they LEAVE understanding the concept.
 
 ---
 
 ## Scoring
 
+### Tracking Principle
+Track the JOURNEY, not just the destination. A corrected wrong answer is learning, but it's not the same as knowing.
+
+| Answer Result | Points | Report As |
+|---------------|--------|----------|
+| Correct on first attempt | 1.0 | ✅ Correct |
+| Wrong → Corrected after explanation | 0.5 | ⚠️ Corrected (Attempts: N) |
+| Wrong → Still wrong after retry | 0 | ❌ Incorrect |
+
+**Final Score**: Sum of points (max 5.0)
+
 | Score | Certification Level |
 |-------|---------------------|
-| 5/5 | 🏆 LG Master Developer |
-| 3-4/5 | 🎓 LG Developer |
-| 0-2/5 | 📚 Keep Learning |
+| 5.0 | 🏆 LG Master Developer |
+| 3.0-4.5 | 🎓 LG Developer |
+| 0-2.5 | 📚 Keep Learning |
+
+> **Intent**: The graduation report must reflect REALITY. If they struggled on Q3, that's valuable feedback—for them AND for tracking which concepts need reinforcement.
 
 ---
 
@@ -86,25 +111,28 @@ Create `docs/reviews/YYYY-MM-DD-graduation.md`:
 # 🎓 LG Developer Certification: [Feature]
 **Date**: [Today]
 
-## Final Score: [X]/5
+## Final Score: [X.X]/5.0
 ## Certification: [LEVEL]
 
 ## Question Breakdown
-| # | Category | Result | Attempts |
-|---|----------|--------|----------|
-| 1 | Architecture | ✅ | 1 |
-| 2 | LG Specifics | ✅ | 2 |
+| # | Category | Result | Points | Attempts |
+|---|----------|--------|--------|----------|
+| 1 | Architecture | ✅ Correct | 1.0 | 1 |
+| 2 | LG Specifics | ⚠️ Corrected | 0.5 | 2 |
+| 3 | State Mgmt | ✅ Correct | 1.0 | 1 |
 ...
 
 ## Strengths
-- [What they did well]
+- [What they demonstrated understanding of]
 
 ## Areas for Growth
-- [What to study more]
+- [Concepts from ⚠️ or ❌ questions - be specific]
 
 ## Mentor's Note
-[Personalized encouragement]
+[Honest, personalized feedback - celebrate wins, acknowledge struggles]
 ```
+
+> **Accuracy Principle**: The report must match reality. If Q2 was wrong then corrected, it shows as ⚠️ with 0.5 points, not ✅. Inflating scores helps no one.
 
 ---
 

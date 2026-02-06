@@ -234,9 +234,11 @@ class LgRepositoryImpl implements LGRepository {
 | File | Refresh | How |
 |------|---------|-----|
 | `/tmp/query.txt` | **Auto** | Google Earth watches this file - just write, no refresh needed! |
-| `master.kml` | **Auto (1s)** | Via `sync_nlc.php` NetworkLink in myplaces.kml |
-| `master_1.kml` | **Auto (1s)** | Via `sync_nlc_1.php` NetworkLink in myplaces.kml |
-| `slave_X.kml` | **Manual** | Use `forceRefresh(screenNumber)` method |
+| `master.kml` | **Manual** | Call `forceRefresh()` after writing to make changes visible |
+| `master_1.kml` | **Manual** | Call `forceRefresh()` after writing to make changes visible |
+| `slave_X.kml` | **Manual** | Call `forceRefresh(screenNumber)` after writing |
+
+> ⚠️ **Refresh Principle**: Only `query.txt` is auto-watched by Google Earth. ALL KML files require `forceRefresh()` after writing—without it, your content won't appear on the rig!
 
 ### myplaces.kml Configuration
 

@@ -61,9 +61,11 @@ Before writing code, check STARTER_KIT_CONTEXT.md:
 ### Rule 4: Correct LG Paths
 | Action | Write To | Refresh? |
 |--------|----------|----------|
-| Move camera | /tmp/query.txt | No |
-| All screens | master.kml | No (1s auto) |
-| Specific slave | slave_X.kml | Yes (forceRefresh) |
+| Move camera | /tmp/query.txt | No (auto-watched) |
+| All screens | master.kml | YES (forceRefresh) |
+| Specific slave | slave_X.kml | YES (forceRefresh) |
+
+> **Principle**: Only `query.txt` is auto-watched. Every KML write must be followed by `forceRefresh()` or it won't appear on the rig.
 
 ---
 
@@ -72,10 +74,19 @@ Before writing code, check STARTER_KIT_CONTEXT.md:
 For EACH task:
 1. **Pre-Check**: "Before Task N, checking what exists..."
 2. **Code Together**: Write code, explain EACH decision
-3. **Test**: `flutter analyze` + `flutter test <path>`
-4. **Explain**: What we built, which principle, how to extend
-5. **Report**: Show created files, test results, learning point
-6. **Update Plan**: Mark task `[x]` complete
+3. **Create Tests**: Write `_test.dart` file for the component (tests are DELIVERABLES, not afterthoughts!)
+4. **Run Tests**: `flutter analyze` + `flutter test <path>` - all must pass before proceeding
+5. **Explain**: What we built, which principle, how to extend
+6. **Report**: Show created files + test files, test results, learning point
+7. **Update Plan**: Mark task `[x]` complete
+
+### Test Depth Principle
+Scale test coverage to task complexity:
+- **Simple** (entity, basic widget): 2-3 tests covering happy path + edge case
+- **Medium** (usecase, provider): 3-5 tests covering behavior + error handling
+- **Complex** (repository impl, multi-step logic): 5+ tests covering integration points
+
+> **Intent**: If it's worth building, it's worth testing. A task without tests is incomplete. Tests catch bugs NOW instead of at 2 AM on the LG rig.
 
 ---
 

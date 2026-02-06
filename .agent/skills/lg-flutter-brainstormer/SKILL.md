@@ -59,6 +59,19 @@ When they choose, explain what it means for implementation (~100 words):
 
 ---
 
+## Reality Validation Principle
+
+When proposing ANY numerical values, formulas, or scales:
+
+1. **Sanity Check**: "What does this look like in practice?" Walk through concrete examples at both extremes.
+2. **Real-World Anchor**: Reference known data points. If proposing earthquake impact zones, what did actual earthquakes affect? If proposing speeds, what's a car vs plane?
+3. **User Challenge**: If the user questions your numbers, DON'T defend—investigate. Their intuition about their domain is valuable.
+4. **Scale Awareness**: Small inputs should produce small outputs. Large inputs should produce large outputs. If a tiny input creates massive output, something is wrong.
+
+> **Intent**: You're not just generating ideas—you're proposing things that will be BUILT. A visualization showing 50km "danger zones" for minor tremors will look absurd on a real LG rig. Catch this BEFORE coding.
+
+---
+
 ## Architecture Preview
 
 Before design doc, paint the picture:
