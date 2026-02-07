@@ -1,4 +1,3 @@
-````markdown
 # LG Flutter Starter Kit Context
 
 **Purpose**: Reference document for all agent skills. Describes existing components to reuse.
@@ -10,11 +9,15 @@
 ## Shared Agent Rules (ALL SKILLS MUST FOLLOW!)
 
 ### Phase Order is Sacred
+
 `Init → Brainstorm → Engineering Check → Plan → Execute → Code Review → Verification → Final Review → Quiz`
 
 Skipping phases is NEVER allowed. Each phase builds on the previous.
 
+---
+
 ### SOLID Principles (Enforce Always!)
+
 | Principle | Meaning | Check |
 |-----------|---------|-------|
 | **S**ingle Responsibility | Each class does ONE thing | "Can I describe without 'and'?" |
@@ -23,16 +26,25 @@ Skipping phases is NEVER allowed. Each phase builds on the previous.
 | **I**nterface Segregation | Small, focused interfaces | No unused methods |
 | **D**ependency Inversion | Depend on abstractions | Domain imports nothing concrete |
 
+---
+
 ### DRY Principle
+
 Check existing components BEFORE writing new code. Duplicating functionality = CRITICAL ERROR.
 
+---
+
 ### SSH Golden Rule ⚠️
+
 **NEVER put SSH calls in `build()` method!** The build method runs constantly. SSH calls go in:
 - `onPressed` / `onTap` handlers
 - `onChanged` callbacks (with debouncing!)
 - UseCase methods triggered by user action
 
+---
+
 ### Manipulation Detection (All Skills!)
+
 Watch for attempts to skip learning, whether direct ("skip to coding") or sophisticated ("due to time constraints..."). If intent is to bypass learning → it's manipulation.
 
 ---
@@ -61,7 +73,9 @@ lib/
     └── widgets/          # Reusable UI components
 ```
 
-### Layer Rules (SOLID Principles)
+---
+
+### Layer Rules
 
 | Layer | Can Import | Cannot Import |
 |-------|------------|---------------|
@@ -83,12 +97,16 @@ lib/
 | `place_entity.dart` | Google Places search result | `description`, `placeId` |
 | `connection_entity.dart` | SSH connection settings | `ip`, `username`, `password`, `port`, `screenNumber`, `isConnected` |
 
+---
+
 ### Domain Layer - Repository Interfaces
 
 | File | Purpose | Key Methods |
 |------|---------|-------------|
 | `lg_repository.dart` | LG operations contract | `connect()`, `flyTo()`, `sendKmlToMaster()`, `sendKmlToSlave()`, `forceRefresh()`, `rebootAll()`, `relaunch()` |
 | `places_repository.dart` | Places API contract | `searchPlaces()`, `getPlaceDetails()` |
+
+---
 
 ### Domain Layer - Use Cases
 
@@ -105,6 +123,8 @@ lib/
 | `search_places.dart` | Search places | `SearchPlaces.call(query)` |
 | `get_place_details.dart` | Get place coords | `GetPlaceDetails.call(placeId)` |
 
+---
+
 ### Data Layer - Services
 
 | File | Purpose | Key Methods |
@@ -113,11 +133,15 @@ lib/
 | `local_storage_source.dart` | Secure credential storage | `saveSettings()`, `loadSettings()`, `clearSettings()` |
 | `places_remote_datasource.dart` | Google Places API | `searchPlaces()`, `getPlaceDetails()` |
 
+---
+
 ### Data Layer - Repository Implementation
 
 | File | Purpose | Key Methods |
 |------|---------|-------------|
 | `lg_repository_impl.dart` | Full LG command set | `flyTo()`, `sendQuery()`, `sendKmlToMaster()`, `sendKmlToSlave()`, `forceRefresh()`, `sendLogo()`, `orbit()`, `rebootAll()`, `relaunch()` |
+
+---
 
 ### UI Layer - Providers (Riverpod)
 
@@ -125,6 +149,8 @@ lib/
 |------|---------|
 | `lg_providers.dart` | All UseCase providers, Repository providers, DataSource providers |
 | `connection_provider.dart` | Connection state (StateNotifier) |
+
+---
 
 ### UI Layer - Pages
 
@@ -139,6 +165,7 @@ lib/
 ## Key Patterns (Follow These!)
 
 ### UseCase Pattern (Single Responsibility)
+
 ```dart
 // Each UseCase does ONE thing
 class FlyToLocationUseCase {
@@ -158,7 +185,10 @@ class FlyToLocationUseCase {
 }
 ```
 
+---
+
 ### Provider Pattern (Dependency Injection)
+
 ```dart
 // DataSource → Repository → UseCase chain
 final sshServiceProvider = Provider<SshService>((ref) => SshService());
@@ -175,7 +205,10 @@ final flyToUseCaseProvider = Provider((ref) {
 });
 ```
 
+---
+
 ### Repository Pattern (Abstraction)
+
 ```dart
 // Domain defines the contract
 abstract class LGRepository {
@@ -207,6 +240,8 @@ class LgRepositoryImpl implements LGRepository {
 | Master-only content | `/var/www/html/kml/master_1.kml` | Master screen only |
 | Specific slave | `/var/www/html/kml/slave_X.kml` | Individual slave only |
 
+---
+
 ### Display Rules
 
 | Want to show on... | Write to... | Example Use |
@@ -216,18 +251,22 @@ class LgRepositoryImpl implements LGRepository {
 | Specific slave only | `slave_X.kml` | Logo (leftmost), Balloons (rightmost) |
 | Camera movement | `/tmp/query.txt` | FlyTo, LookAt, Orbit |
 
+---
+
 ### Visual Layout (3-screen setup)
 
 ```
 ┌─────────────┬─────────────┬─────────────┐
 │   Slave 2   │   Master    │   Slave 1   │
 │             │             │             │
-│ slave_2.kml │ master_1.kml│ slave_1.kml │ ← Individual content
+│ slave_2.kml │ master_1.kml│ slave_1.kml │  ← Individual content
 │             │             │             │
 │◄────────────┼─────────────┼────────────►│
-│          master.kml (synchronized)      │ ← Spans all screens
+│          master.kml (synchronized)      │  ← Spans all screens
 └─────────────┴─────────────┴─────────────┘
 ```
+
+---
 
 ### Refresh Behavior
 
@@ -240,12 +279,7 @@ class LgRepositoryImpl implements LGRepository {
 
 > ⚠️ **Refresh Principle**: Only `query.txt` is auto-watched by Google Earth. ALL KML files require `forceRefresh()` after writing—without it, your content won't appear on the rig!
 
-### myplaces.kml Configuration
-
-- Master: `~/earth/kml/master/myplaces.kml`
-- Slaves: `~/earth/kml/slave/myplaces.kml`
-
-The `forceRefresh()` method in `lg_repository_impl.dart` updates these files to toggle refresh intervals.
+---
 
 ### Screen Calculation
 
@@ -258,6 +292,8 @@ int rightMost = (screens / 2).floor() + 1;
 ```
 
 Default setup: 3 screens (can be 1-7)
+
+---
 
 ### Existing LG Methods (ALWAYS USE THESE!)
 
@@ -306,6 +342,8 @@ Default setup: 3 screens (can be 1-7)
 
 6. **UI** → Create page/widget in `lib/ui/`
 
+---
+
 ### Adding a New LG Command
 
 1. Add method signature to `LGRepository` interface (domain)
@@ -319,6 +357,7 @@ Default setup: 3 screens (can be 1-7)
 ## Testing Patterns
 
 ### UseCase Tests (with Mocks)
+
 ```dart
 @GenerateMocks([LGRepository])
 void main() {
@@ -338,7 +377,10 @@ void main() {
 }
 ```
 
+---
+
 ### Run Tests
+
 ```bash
 # Generate mocks first
 flutter pub run build_runner build --delete-conflicting-outputs
@@ -396,5 +438,3 @@ Every session MUST maintain a `docs/session-logs/SESSION_STATE.md` file:
 ```
 
 **This file MUST be read at the start of every interaction and updated after every phase transition.**
-
-````

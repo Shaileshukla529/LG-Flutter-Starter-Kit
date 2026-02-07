@@ -12,11 +12,15 @@ flutter doctor
 
 Ensure all checkmarks are green for your target platform.
 
+---
+
 ## 2. Get Dependencies
 
 ```bash
 flutter pub get
 ```
+
+---
 
 ## 3. Run on Device/Emulator
 
@@ -29,9 +33,15 @@ flutter devices  # List available devices
 flutter run -d <device_id>
 ```
 
+---
+
 ## 4. Hot Reload
 
-While the app is running, press `r` in the terminal for hot reload, or `R` for hot restart.
+While the app is running:
+- Press `r` in the terminal for **hot reload**
+- Press `R` for **hot restart**
+
+---
 
 ## 5. Analyze Code
 
@@ -41,11 +51,15 @@ flutter analyze
 
 Fix any warnings or errors before committing.
 
+---
+
 ## 6. Run Tests
 
 ```bash
 flutter test
 ```
+
+---
 
 ## 7. Build for Release
 

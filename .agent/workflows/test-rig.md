@@ -16,6 +16,8 @@ description: How to test a Flutter LG Controller with the Liquid Galaxy rig (rea
    - SSH password
    - Port (default: 22)
 
+---
+
 ## 1. Configure Connection in App
 
 Launch the Flutter app and navigate to **Settings** → **LG Connection**.
@@ -28,39 +30,52 @@ Enter:
 
 Tap **Save** (credentials are stored securely).
 
+---
+
 ## 2. Test Connection
 
 Tap **Connect** button. You should see:
 - ✅ "Connected" status in the app
 - Console output (if debugging): `SSH connection established`
 
+---
+
 ## 3. Test Basic Commands
 
 ### FlyTo Test
+
 1. Use the map or enter coordinates
 2. Tap "FlyTo" button
 3. **Verify**: Google Earth on LG screens should fly to the location
 
 ### Orbit Test
+
 1. Select a location
 2. Tap "Orbit" button
 3. **Verify**: Google Earth should start orbiting around the point
 
 ### Relaunch Test
+
 1. Go to Settings → LG Actions
 2. Tap "Relaunch Google Earth"
 3. **Verify**: All LG screens should restart and reload Google Earth
+
+---
 
 ## 4. Test KML (if applicable)
 
 1. Upload a KML file through the app
 2. **Verify**: The KML visualization appears on the LG screens
 
+---
+
 ## 5. Disconnect
 
 1. Tap **Disconnect** in the app
 2. **Verify**: Status shows "Disconnected"
 3. **Verify**: No zombie SSH sessions on the rig (`ps aux | grep ssh`)
+
+---
 
 ## Troubleshooting
 
@@ -70,6 +85,8 @@ Tap **Connect** button. You should see:
 | "Authentication failed" | Verify username and password |
 | Commands not working | Check `/tmp/query.txt` on LG Master for errors |
 | App crashes on connect | Check `flutter analyze` for issues |
+
+---
 
 ## Simulated Testing (No Rig)
 
