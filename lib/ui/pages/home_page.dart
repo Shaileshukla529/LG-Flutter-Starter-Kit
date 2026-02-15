@@ -1,14 +1,10 @@
-import 'dart:async';
-// Dio import removed
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
-import '../providers/lg_providers.dart';
 import '../providers/connection_provider.dart';
-
-// Use: flutter run --dart-define=GOOGLE_MAPS_API_KEY=your_api_key
-// Maps API Key is now handled in PlacesRemoteDataSource
+import '../providers/lg_providers.dart';
+import '../providers/navigation_provider.dart';
+import '../utils/lg_task_mixin.dart';
+import '../widgets/app_drawer.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -17,144 +13,82 @@ class HomePage extends ConsumerStatefulWidget {
   ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
-  final Completer<GoogleMapController> _controller = Completer();
-  final TextEditingController _searchController = TextEditingController();
-  List<dynamic> _predictions = [];
-  bool _isLocationGranted = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkPermissions();
-  }
-
-  Future<void> _checkPermissions() async {
-    final status = await Permission.location.request();
-    setState(() {
-      _isLocationGranted = status.isGranted;
-    });
-  }
-
-  static const CameraPosition _kInitialPosition = CameraPosition(
-    target: LatLng(28.6139, 77.2090), // New Delhi
-    zoom: 12,
-  );
-
-// _apiKey getter removed
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
+class _HomePageState extends ConsumerState<HomePage> with LgTaskMixin {
   @override
   Widget build(BuildContext context) {
-    // Watch connection status
+    final isConnected =
+        ref.watch(connectionProvider.select((s) => s.isConnected));
     final connectionState = ref.watch(connectionProvider);
-    final isConnected = connectionState.isConnected;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: _kInitialPosition,
-            myLocationEnabled: _isLocationGranted,
-            myLocationButtonEnabled: _isLocationGranted,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
-            onTap: (LatLng latLng) {
-              _handleFlyTo(latLng.latitude, latLng.longitude);
+      backgroundColor: colorScheme.surface,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.menu, color: colorScheme.onSurface),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+                key: Key('Settings Icons'),
+                Icons.settings_outlined,
+                color: colorScheme.onSurface),
+            onPressed: () {
+              ref.read(navigationProvider.notifier).setIndex(1);
             },
           ),
-          // Connection Status Indicator
-          Positioned(
-            top: 50,
-            left: 16,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                color: isConnected ? Colors.green : Colors.red.shade400,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color.fromRGBO(0, 0, 0, 0.2),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    isConnected ? Icons.wifi : Icons.wifi_off,
-                    color: Colors.white,
-                    size: 14,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    isConnected ? 'LG' : 'Offline',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 50,
-            left: 100, // After the connection indicator
-            right: 16,
+        ],
+      ),
+      drawer: const AppDrawer(),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search Place...',
-                      prefixIcon: const Icon(Icons.search, color: Colors.blue),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 14),
-                      suffixIcon: _searchController.text.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                _searchController.clear();
-                                setState(() => _predictions = []);
-                              },
-                            )
-                          : null,
+                _buildHeroSection(context, colorScheme, textTheme),
+                const SizedBox(height: 32),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: _buildConnectionStatus(context, colorScheme, textTheme,
+                      isConnected, connectionState),
+                ),
+                const SizedBox(height: 32),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Quick Actions',
+                    style: textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
                     ),
-                    onChanged: _onSearchChanged,
                   ),
                 ),
-                if (_predictions.isNotEmpty)
-                  Card(
-                    elevation: 4,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _predictions.length,
-                      itemBuilder: (context, index) {
-                        final prediction = _predictions[index];
-                        return ListTile(
-                          leading: const Icon(Icons.location_on),
-                          title: Text(prediction.description),
-                          onTap: () => _onPlaceSelected(prediction.placeId),
-                        );
-                      },
-                    ),
-                  ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            sliver: _buildQuickActionsGrid(context, colorScheme),
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 32),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: _buildTipsSection(context, colorScheme, textTheme),
+                ),
+                const SizedBox(height: 32),
               ],
             ),
           ),
@@ -163,100 +97,362 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  Future<void> _onSearchChanged(String query) async {
-    if (query.isEmpty) {
-      setState(() => _predictions = []);
-      return;
-    }
-
-    try {
-      final results = await ref.read(searchPlacesUseCaseProvider).call(query);
-      setState(() => _predictions = results);
-    } catch (e) {
-      debugPrint('Autocomplete Error: $e');
-    }
-  }
-
-  Future<void> _onPlaceSelected(String placeId) async {
-    setState(() => _predictions = []);
-    _searchController.clear();
-
-    try {
-      final flyToEntity =
-          await ref.read(getPlaceDetailsUseCaseProvider).call(placeId);
-
-      if (flyToEntity != null) {
-        _moveCamera(flyToEntity.latitude, flyToEntity.longitude);
-        _handleFlyTo(flyToEntity.latitude, flyToEntity.longitude);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
-        );
-      }
-    }
-  }
-
-  Future<void> _moveCamera(double lat, double lng) async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(target: LatLng(lat, lng), zoom: 16),
-    ));
-  }
-
-  Future<void> _handleFlyTo(double lat, double lng) async {
-    // Check connection status before sending command
-    final isConnected = ref.read(connectionProvider).isConnected;
-
-    if (!isConnected) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.wifi_off, color: Colors.white, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Not connected to LG! Connect first.',
-                    style: const TextStyle(fontSize: 13),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+  Widget _buildHeroSection(
+      BuildContext context, ColorScheme colorScheme, TextTheme textTheme) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.primary,
+            colorScheme.primary.withValues(alpha: 0.85),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colorScheme.onPrimary.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
+                child: Icon(
+                  Icons.rocket_launch_rounded,
+                  color: colorScheme.onPrimary,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Liquid Galaxy',
+                      style: textTheme.headlineSmall?.copyWith(
+                        color: colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Controller',
+                      style: textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onPrimary.withValues(alpha: 0.9),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: colorScheme.onPrimary.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
             ),
-            backgroundColor: Colors.orange.shade700,
-            duration: const Duration(seconds: 3),
-            action: SnackBarAction(
-              label: 'Settings',
-              textColor: Colors.white,
-              onPressed: () {
-                // TODO: Navigate to settings page
-              },
+            child: Text(
+              'Gemini\'s Summer of Code',
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onPrimary,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-        );
-      }
-      return;
-    }
-
-    try {
-      await ref.read(flyToLocationUseCaseProvider).call(lat, lng);
-      if (mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Flying to $lat, $lng 🚀'),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 1),
-        ));
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('FlyTo Error: $e'), backgroundColor: Colors.red));
-      }
-    }
+        ],
+      ),
+    );
   }
+
+  Widget _buildConnectionStatus(BuildContext context, ColorScheme colorScheme,
+      TextTheme textTheme, bool isConnected, dynamic connectionState) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: isConnected
+            ? colorScheme.primaryContainer
+            : colorScheme.errorContainer,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isConnected
+              ? colorScheme.primary.withValues(alpha: 0.3)
+              : colorScheme.error.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
+      child: InkWell(
+        onTap: () {
+          if (!isConnected) {
+            ref.read(navigationProvider.notifier).setIndex(1);
+          }
+        },
+        borderRadius: BorderRadius.circular(20),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isConnected
+                    ? colorScheme.primary.withValues(alpha: 0.2)
+                    : colorScheme.error.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                isConnected
+                    ? Icons.cloud_done_rounded
+                    : Icons.cloud_off_rounded,
+                color: isConnected ? colorScheme.primary : colorScheme.error,
+                size: 32,
+              ),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isConnected ? 'Connected' : 'Disconnected',
+                    style: textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: isConnected
+                          ? colorScheme.onPrimaryContainer
+                          : colorScheme.onErrorContainer,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    isConnected
+                        ? 'System is ready for operations'
+                        : 'Connect from settings to get started',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: isConnected
+                          ? colorScheme.onPrimaryContainer
+                              .withValues(alpha: 0.8)
+                          : colorScheme.onErrorContainer.withValues(alpha: 0.8),
+                    ),
+                  ),
+                  if (isConnected) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      '${connectionState.username}@${connectionState.ip}:${connectionState.port}',
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onPrimaryContainer
+                            .withValues(alpha: 0.6),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ]
+                ],
+              ),
+            ),
+            if (!isConnected)
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: colorScheme.onErrorContainer.withValues(alpha: 0.5),
+                size: 20,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickActionsGrid(BuildContext context, ColorScheme colorScheme) {
+    final actions = [
+      _QuickAction(
+        icon: Icons.cleaning_services_rounded,
+        label: 'Clean KML',
+        color: colorScheme.primaryContainer.withValues(alpha: 0.5),
+        iconColor: colorScheme.primary,
+        onTap: () => executeLgTask(
+            () => ref.read(cleanKmlUseCaseProvider).call(),
+            label: 'Clean KML'),
+      ),
+      _QuickAction(
+        icon: Icons.image_rounded,
+        label: 'Show Logo',
+        color: colorScheme.secondaryContainer.withValues(alpha: 0.5),
+        iconColor: colorScheme.secondary,
+        onTap: () => executeLgTask(
+            () => ref.read(sendLogoUseCaseProvider).call(),
+            label: 'Show Logo'),
+      ),
+      _QuickAction(
+        icon: Icons.hide_image_rounded,
+        label: 'Clean Logo',
+        color: colorScheme.tertiaryContainer.withValues(alpha: 0.5),
+        iconColor: colorScheme.tertiary,
+        onTap: () => executeLgTask(
+            () => ref.read(cleanLogoUseCaseProvider).call(),
+            label: 'Clean Logo'),
+      ),
+      _QuickAction(
+        icon: Icons.map_rounded,
+        label: 'View Map',
+        color: colorScheme.surfaceContainerHigh,
+        iconColor: colorScheme.onSurface,
+        onTap: () {
+          ref.read(navigationProvider.notifier).setIndex(2);
+        },
+      ),
+    ];
+
+    return SliverGrid(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 1.3,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final action = actions[index];
+          return _buildActionCard(context, action);
+        },
+        childCount: actions.length,
+      ),
+    );
+  }
+
+  Widget _buildActionCard(BuildContext context, _QuickAction action) {
+    return Material(
+      color: action.color,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        onTap: action.onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: action.iconColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  action.icon,
+                  color: action.iconColor,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                action.label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTipsSection(
+      BuildContext context, ColorScheme colorScheme, TextTheme textTheme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Getting Started',
+          style: textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: colorScheme.outline.withValues(alpha: 0.1),
+            ),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.lightbulb_rounded,
+                  color: colorScheme.primary,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Pro Tip',
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Configure your connection in Settings to start controlling the Liquid Galaxy rig. You can verify connectivity by sending a test logo.',
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _QuickAction {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final Color iconColor;
+  final VoidCallback onTap;
+
+  _QuickAction({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.iconColor,
+    required this.onTap,
+  });
 }

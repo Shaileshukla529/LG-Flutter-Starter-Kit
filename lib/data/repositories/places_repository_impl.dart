@@ -10,11 +10,14 @@ class PlacesRepositoryImpl implements PlacesRepository {
 
   @override
   Future<List<PlaceEntity>> searchPlaces(String query) async {
-    return await _dataSource.searchPlaces(query);
+    final models = await _dataSource.searchPlaces(query);
+    return models.map((model) => model.toEntity()).toList();
   }
 
   @override
   Future<FlyToEntity?> getPlaceDetails(String placeId) async {
-    return await _dataSource.getPlaceDetails(placeId);
+    final data = await _dataSource.getPlaceDetails(placeId);
+    if (data == null) return null;
+    return data.toEntity();
   }
 }

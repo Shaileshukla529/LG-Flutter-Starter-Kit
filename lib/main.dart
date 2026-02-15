@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'ui/pages/main_page.dart';
+import 'core/constant/theme.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -20,14 +21,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final materialTheme = MaterialTheme(textTheme);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'LG Starter Kit',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(131, 218, 215, 225)),
-        useMaterial3: true,
-      ),
+      theme: materialTheme.light(),
+      darkTheme: materialTheme.dark(),
       home: const MainPage(),
     );
   }

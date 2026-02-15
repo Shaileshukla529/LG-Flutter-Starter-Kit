@@ -1,16 +1,16 @@
-import 'dart:typed_data';
-
 import 'package:flutter/services.dart';
+import 'package:lg_flutter_stater_kit/core/constant/log_service.dart';
 
 import '../datasources/local_storage_source.dart';
-import '../datasources/ssh_service.dart';
+import '../../domain/services/ssh_service_interface.dart';
 import '../../domain/entities/connection_entity.dart';
 import '../../domain/entities/fly_to_entity.dart';
 import '../../domain/entities/orbit_entity.dart';
 import '../../domain/repositories/lg_repository.dart';
 
 class LgRepositoryImpl implements LGRepository {
-  final SshService _sshService;
+  final log = LogService();
+  final ISshService _sshService;
   final LocalStorageDataSource _storageDataSource;
 
   /// Cached screen number (loaded from storage on init)
@@ -90,7 +90,7 @@ class LgRepositoryImpl implements LGRepository {
     try {
       await _sshService.execute(cmd);
     } catch (e) {
-      print('LG Command Error: $e');
+      log.e('LG Command Error: $e');
       rethrow;
     }
   }
@@ -322,7 +322,7 @@ $tourSteps
           await Future.delayed(const Duration(milliseconds: 200));
         }
       } catch (e) {
-        print('Reboot lg$i failed: $e');
+        log.e('Reboot lg$i failed: $e');
         allSuccessful = false;
       }
     }
@@ -349,7 +349,7 @@ $tourSteps
           await Future.delayed(const Duration(milliseconds: 200));
         }
       } catch (e) {
-        print('Shutdown lg$i failed: $e');
+        log.e('Shutdown lg$i failed: $e');
         allSuccessful = false;
       }
     }

@@ -1,13 +1,17 @@
 import "dart:async";
 import "dart:typed_data";
 import "package:dartssh2/dartssh2.dart";
+import "package:lg_flutter_stater_kit/core/constant/log_service.dart";
+import '../../domain/services/ssh_service_interface.dart';
 
-class SshService {
+class SshService implements ISshService {
+  final log = LogService();
   SSHClient? _client;
   Timer? _healthCheckTimer;
   bool _isHealthy = false;
 
   // Callback for when connection is lost
+  @override
   void Function()? onConnectionLost;
 
   // Store credentials for reconnection (runtime only, not persistent)
@@ -20,15 +24,19 @@ class SshService {
       _ip != null && _password != null && _user != null && _port != null;
 
   /// Returns true if the SSH client is connected and healthy.
+  @override
   bool get isConnected =>
       _isHealthy && _client != null && !_client!.isClosed && _hasCredentials;
 
   /// Exposes the password for system commands (relaunch, reboot, etc.)
+  @override
   String? get password => _password;
 
   /// Exposes the username for system commands
+  @override
   String? get username => _user;
 
+  @override
   Future<void> connect(
       String ip, String password, String user, int port) async {
     _ip = ip;
@@ -58,7 +66,7 @@ class SshService {
     } catch (e) {
       _client = null;
       _isHealthy = false;
-      print('SSH Connect Error: $e');
+      log.e('SSH Connect Error: $e');
       rethrow;
     }
   }
@@ -94,10 +102,10 @@ class SshService {
       // If we get here, connection is healthy
       if (!_isHealthy) {
         _isHealthy = true;
-        print('SSH Connection restored');
+        log.i('SSH Connection restored');
       }
     } catch (e) {
-      print('SSH Health Check Failed: $e');
+      log.e('SSH Health Check Failed: $e');
       _handleConnectionLost();
     }
   }
@@ -107,11 +115,12 @@ class SshService {
     if (_isHealthy) {
       _isHealthy = false;
       _closeClient();
-      print('SSH Connection lost - notifying listeners');
+      log.i('SSH Connection lost - notifying listeners');
       onConnectionLost?.call();
     }
   }
 
+  @override
   Future<void> disconnect() async {
     _stopHealthCheck();
     _closeClient();
@@ -133,6 +142,7 @@ class SshService {
     _port = null;
   }
 
+  @override
   Future<String?> execute(String cmd) async {
     if (!_hasCredentials) {
       throw Exception('SSH not connected. Please connect first.');
@@ -151,7 +161,7 @@ class SshService {
         _isHealthy = true; // Command succeeded, connection is healthy
         return 'OK';
       } catch (e) {
-        print('SSH Execute Error (attempt ${attempt + 1}): $e');
+        log.e('SSH Execute Error (attempt ${attempt + 1}): $e');
         _closeClient();
         _isHealthy = false;
         if (attempt == 1) {
@@ -165,6 +175,7 @@ class SshService {
 
   /// Upload content to remote path via SFTP.
   /// Used for uploading KML files to /var/www/html/
+  @override
   Future<void> uploadViaSftp(String content, String remotePath) async {
     if (!_hasCredentials) {
       throw Exception('SSH not connected. Please connect first.');
@@ -191,9 +202,9 @@ class SshService {
       await file.close();
 
       _isHealthy = true;
-      print('SFTP Upload successful: $remotePath');
+      log.i('SFTP Upload successful: $remotePath');
     } catch (e) {
-      print('SFTP Upload Error: $e');
+      log.e('SFTP Upload Error: $e');
       _isHealthy = false;
       rethrow;
     }
@@ -201,6 +212,7 @@ class SshService {
 
   /// Upload binary data (e.g., images) to remote path via SFTP.
   /// Used for uploading logo images to /var/www/html/
+  @override
   Future<void> uploadBytesViaSftp(Uint8List bytes, String remotePath) async {
     if (!_hasCredentials) {
       throw Exception('SSH not connected. Please connect first.');
@@ -224,15 +236,16 @@ class SshService {
       await file.close();
 
       _isHealthy = true;
-      print('SFTP Binary Upload successful: $remotePath');
+      log.i('SFTP Binary Upload successful: $remotePath');
     } catch (e) {
-      print('SFTP Binary Upload Error: $e');
+      log.e('SFTP Binary Upload Error: $e');
       _isHealthy = false;
       rethrow;
     }
   }
 
   /// Dispose method to clean up resources
+  @override
   void dispose() {
     _stopHealthCheck();
     _closeClient();

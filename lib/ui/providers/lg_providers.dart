@@ -1,54 +1,13 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/datasources/local_storage_source.dart';
-import '../../data/datasources/ssh_service.dart';
-import '../../data/datasources/places_remote_datasource.dart';
-import '../../data/repositories/lg_repository_impl.dart';
-import '../../data/repositories/places_repository_impl.dart';
-import '../../domain/repositories/lg_repository.dart';
-import '../../domain/repositories/places_repository.dart';
+import '../../core/di/injection_container.dart';
 import '../../domain/usecases/connect_to_lg.dart';
 import '../../domain/usecases/system_control.dart';
 import '../../domain/usecases/search_places.dart';
 import '../../domain/usecases/get_place_details.dart';
 
-// ─────────────────────────────────────────────────────────────
-// DATA SOURCE PROVIDERS
-// ─────────────────────────────────────────────────────────────
-
-final sshServiceProvider = Provider<SshService>((ref) {
-  return SshService();
-});
-
-final localStorageProvider = Provider<LocalStorageDataSource>((ref) {
-  return LocalStorageDataSource();
-});
-
-final dioProvider = Provider<Dio>((ref) {
-  return Dio();
-});
-
-final placesDataSourceProvider = Provider<PlacesRemoteDataSource>((ref) {
-  final dio = ref.watch(dioProvider);
-  final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
-  return PlacesRemoteDataSource(dio, apiKey: apiKey);
-});
-
-// ─────────────────────────────────────────────────────────────
-// REPOSITORY PROVIDERS
-// ─────────────────────────────────────────────────────────────
-
-final lgRepositoryProvider = Provider<LGRepository>((ref) {
-  final sshService = ref.watch(sshServiceProvider);
-  final storageService = ref.watch(localStorageProvider);
-  return LgRepositoryImpl(sshService, storageService);
-});
-
-final placesRepositoryProvider = Provider<PlacesRepository>((ref) {
-  final dataSource = ref.watch(placesDataSourceProvider);
-  return PlacesRepositoryImpl(dataSource);
-});
+// RE-EXPORT REPOSITORY INTERFACES FROM DI CONTAINER SO USE CASES HAVE ACCESS
+export '../../core/di/injection_container.dart'
+    show lgRepositoryProvider, placesRepositoryProvider;
 
 // ─────────────────────────────────────────────────────────────
 // LG USE CASE PROVIDERS

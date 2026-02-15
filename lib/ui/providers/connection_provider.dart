@@ -1,16 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/di/injection_container.dart';
 import '../../core/errors/exceptions.dart';
 import '../../domain/repositories/lg_repository.dart';
 import '../../domain/entities/connection_entity.dart';
 import '../../domain/usecases/connect_to_lg.dart';
-import '../../data/datasources/ssh_service.dart';
+import '../../domain/services/ssh_service_interface.dart';
 import 'lg_providers.dart';
 
 class ConnectionNotifier extends StateNotifier<ConnectionEntity> {
   final ConnectToLgUseCase _connectToLg;
   final DisconnectFromLgUseCase _disconnectFromLg;
   final LGRepository _repository;
-  final SshService _sshService;
+  final ISshService _sshService;
 
   ConnectionNotifier(
     this._connectToLg,
@@ -26,7 +27,6 @@ class ConnectionNotifier extends StateNotifier<ConnectionEntity> {
   /// Setup listener for connection lost events from SSH service
   void _setupConnectionListener() {
     _sshService.onConnectionLost = () {
-      print('ConnectionProvider: Connection lost detected!');
       if (state.isConnected) {
         state = state.copyWith(isConnected: false);
       }
@@ -85,7 +85,6 @@ class ConnectionNotifier extends StateNotifier<ConnectionEntity> {
 
       state = state.copyWith(isConnected: true);
     } catch (e) {
-      print("Connection Error: $e");
       state = state.copyWith(isConnected: false);
       rethrow;
     }
@@ -96,7 +95,7 @@ class ConnectionNotifier extends StateNotifier<ConnectionEntity> {
       await _disconnectFromLg.call();
       state = state.copyWith(isConnected: false);
     } catch (e) {
-      print("Disconnect Error: $e");
+      // Handle or log disconnect error if needed
     }
   }
 }
@@ -107,5 +106,6 @@ final connectionProvider =
   final disconnectFromLg = ref.read(disconnectFromLgUseCaseProvider);
   final repository = ref.read(lgRepositoryProvider);
   final sshService = ref.read(sshServiceProvider);
-  return ConnectionNotifier(connectToLg, disconnectFromLg, repository, sshService);
+  return ConnectionNotifier(
+      connectToLg, disconnectFromLg, repository, sshService);
 });

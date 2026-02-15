@@ -3,14 +3,16 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
-import 'dart:typed_data' as _i4;
+import 'dart:async' as _i4;
+import 'dart:typed_data' as _i5;
 
+import 'package:lg_flutter_stater_kit/core/constant/log_service.dart' as _i2;
 import 'package:lg_flutter_stater_kit/data/datasources/local_storage_source.dart'
-    as _i5;
-import 'package:lg_flutter_stater_kit/data/datasources/ssh_service.dart' as _i2;
-import 'package:lg_flutter_stater_kit/domain/entities/connection_entity.dart'
     as _i6;
+import 'package:lg_flutter_stater_kit/domain/entities/connection_entity.dart'
+    as _i7;
+import 'package:lg_flutter_stater_kit/domain/services/ssh_service_interface.dart'
+    as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -28,11 +30,21 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-/// A class which mocks [SshService].
+class _FakeLogService_0 extends _i1.SmartFake implements _i2.LogService {
+  _FakeLogService_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+/// A class which mocks [ISshService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSshService extends _i1.Mock implements _i2.SshService {
-  MockSshService() {
+class MockISshService extends _i1.Mock implements _i3.ISshService {
+  MockISshService() {
     _i1.throwOnMissingStub(this);
   }
 
@@ -43,16 +55,16 @@ class MockSshService extends _i1.Mock implements _i2.SshService {
       ) as bool);
 
   @override
-  set onConnectionLost(void Function()? value) => super.noSuchMethod(
+  set onConnectionLost(void Function()? callback) => super.noSuchMethod(
         Invocation.setter(
           #onConnectionLost,
-          value,
+          callback,
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  _i3.Future<void> connect(
+  _i4.Future<void> connect(
     String? ip,
     String? password,
     String? user,
@@ -68,31 +80,31 @@ class MockSshService extends _i1.Mock implements _i2.SshService {
             port,
           ],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i3.Future<void> disconnect() => (super.noSuchMethod(
+  _i4.Future<void> disconnect() => (super.noSuchMethod(
         Invocation.method(
           #disconnect,
           [],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i3.Future<String?> execute(String? cmd) => (super.noSuchMethod(
+  _i4.Future<String?> execute(String? cmd) => (super.noSuchMethod(
         Invocation.method(
           #execute,
           [cmd],
         ),
-        returnValue: _i3.Future<String?>.value(),
-      ) as _i3.Future<String?>);
+        returnValue: _i4.Future<String?>.value(),
+      ) as _i4.Future<String?>);
 
   @override
-  _i3.Future<void> uploadViaSftp(
+  _i4.Future<void> uploadViaSftp(
     String? content,
     String? remotePath,
   ) =>
@@ -104,13 +116,13 @@ class MockSshService extends _i1.Mock implements _i2.SshService {
             remotePath,
           ],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i3.Future<void> uploadBytesViaSftp(
-    _i4.Uint8List? bytes,
+  _i4.Future<void> uploadBytesViaSftp(
+    _i5.Uint8List? bytes,
     String? remotePath,
   ) =>
       (super.noSuchMethod(
@@ -121,9 +133,9 @@ class MockSshService extends _i1.Mock implements _i2.SshService {
             remotePath,
           ],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
   void dispose() => super.noSuchMethod(
@@ -139,38 +151,47 @@ class MockSshService extends _i1.Mock implements _i2.SshService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockLocalStorageDataSource extends _i1.Mock
-    implements _i5.LocalStorageDataSource {
+    implements _i6.LocalStorageDataSource {
   MockLocalStorageDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<void> saveSettings(_i6.ConnectionEntity? connection) =>
+  _i2.LogService get log => (super.noSuchMethod(
+        Invocation.getter(#log),
+        returnValue: _FakeLogService_0(
+          this,
+          Invocation.getter(#log),
+        ),
+      ) as _i2.LogService);
+
+  @override
+  _i4.Future<void> saveSettings(_i7.ConnectionEntity? connection) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveSettings,
           [connection],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i3.Future<_i6.ConnectionEntity?> loadSettings() => (super.noSuchMethod(
+  _i4.Future<_i7.ConnectionEntity?> loadSettings() => (super.noSuchMethod(
         Invocation.method(
           #loadSettings,
           [],
         ),
-        returnValue: _i3.Future<_i6.ConnectionEntity?>.value(),
-      ) as _i3.Future<_i6.ConnectionEntity?>);
+        returnValue: _i4.Future<_i7.ConnectionEntity?>.value(),
+      ) as _i4.Future<_i7.ConnectionEntity?>);
 
   @override
-  _i3.Future<void> clearSettings() => (super.noSuchMethod(
+  _i4.Future<void> clearSettings() => (super.noSuchMethod(
         Invocation.method(
           #clearSettings,
           [],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }

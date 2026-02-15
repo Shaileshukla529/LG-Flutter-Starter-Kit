@@ -48,3 +48,7 @@ app.*.map.json
 # Environment files (contain sensitive data)
 .env
 lib/.env
+
+android/key.properties
+*.jks
+*.keystore

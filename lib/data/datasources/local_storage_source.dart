@@ -1,7 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:lg_flutter_stater_kit/core/constant/log_service.dart';
 import '../../domain/entities/connection_entity.dart';
 
 class LocalStorageDataSource {
+  final log = LogService();
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   static const _keyIp = 'lg_ip';

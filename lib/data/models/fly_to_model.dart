@@ -22,7 +22,8 @@ class FlyToModel {
   });
 
   /// Factory constructor to create FlyToModel from Google Places API response
-  factory FlyToModel.fromPlacesApiJson(Map<String, dynamic> json, {
+  factory FlyToModel.fromPlacesApiJson(
+    Map<String, dynamic> json, {
     double defaultAltitude = 0,
     double defaultRange = 1000,
     double defaultTilt = 45,
@@ -38,7 +39,6 @@ class FlyToModel {
     );
   }
 
-  /// Convert to JSON for serialization
   Map<String, dynamic> toJson() {
     return {
       'latitude': latitude,
