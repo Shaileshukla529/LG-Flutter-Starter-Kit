@@ -34,7 +34,7 @@ class FlyToLocationUseCase {
 class DisconnectFromLgUseCase {
   final LGRepository repository;
   DisconnectFromLgUseCase(this.repository);
-  
+
   Future<void> call() async {
     await repository.disconnect();
   }

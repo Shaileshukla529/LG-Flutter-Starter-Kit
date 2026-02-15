@@ -1,5 +1,3 @@
-/// Domain entity representing a Place prediction
-/// Pure domain object - no data layer dependencies (JSON, etc.)
 class PlaceEntity {
   final String description;
   final String placeId;
@@ -21,5 +19,6 @@ class PlaceEntity {
   int get hashCode => description.hashCode ^ placeId.hashCode;
 
   @override
-  String toString() => 'PlaceEntity(description: $description, placeId: $placeId)';
+  String toString() =>
+      'PlaceEntity(description: $description, placeId: $placeId)';
 }
