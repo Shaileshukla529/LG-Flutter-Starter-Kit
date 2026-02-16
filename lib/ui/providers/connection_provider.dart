@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lg_flutter_stater_kit/core/constant/log_service.dart';
 import '../../core/di/injection_container.dart';
 import '../../core/errors/exceptions.dart';
 import '../../domain/repositories/lg_repository.dart';
@@ -8,6 +9,7 @@ import '../../domain/services/ssh_service_interface.dart';
 import 'lg_providers.dart';
 
 class ConnectionNotifier extends StateNotifier<ConnectionEntity> {
+  final log = LogService();
   final ConnectToLgUseCase _connectToLg;
   final DisconnectFromLgUseCase _disconnectFromLg;
   final LGRepository _repository;
@@ -95,7 +97,7 @@ class ConnectionNotifier extends StateNotifier<ConnectionEntity> {
       await _disconnectFromLg.call();
       state = state.copyWith(isConnected: false);
     } catch (e) {
-      // Handle or log disconnect error if needed
+      log.e(e.toString());
     }
   }
 }

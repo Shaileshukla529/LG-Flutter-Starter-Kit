@@ -387,6 +387,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> with LgTaskMixin {
             final kmlContent = await DefaultAssetBundle.of(context)
                 .loadString('assets/kml/triangle.kml');
             await ref.read(lgRepositoryProvider).sendKmlToMaster(kmlContent);
+
+            await ref.read(flyToLocationUseCaseProvider).call(28.6129, 77.2295);
           },
           label: 'Test Polygon',
         ),
