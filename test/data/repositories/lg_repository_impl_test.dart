@@ -258,7 +258,7 @@ void main() {
     test('should throw exception when rebooting without password', () async {
       when(mockSshService.password).thenReturn(null);
 
-      expect(() => repository.rebootAll(), throwsException);
+      expectLater(repository.rebootAll(), throwsException);
     });
 
     test('should return false if any screen fails to reboot', () async {
@@ -283,7 +283,7 @@ void main() {
         () async {
       when(mockSshService.password).thenReturn(null);
 
-      expect(() => repository.shutdownAll(), throwsException);
+      expectLater(repository.shutdownAll(), throwsException);
     });
 
     test('should send relaunch command to restart display manager', () async {
@@ -298,7 +298,7 @@ void main() {
     test('should throw exception when relaunching without password', () async {
       when(mockSshService.password).thenReturn(null);
 
-      expect(() => repository.relaunch(), throwsException);
+      expectLater(repository.relaunch(), throwsException);
     });
 
     test('should send sed commands for force refresh on a screen', () async {

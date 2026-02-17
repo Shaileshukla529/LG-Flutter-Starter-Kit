@@ -42,15 +42,13 @@ void main() {
                 'status': 'Internal Server Error',
                 'error_message': 'Serious error'
               }, statusCode: 500, requestOptions: RequestOptions(path: '')));
-      final val = dataSource.searchPlaces('New_Delhi');
-      expect(val, throwsException);
+      expectLater(dataSource.searchPlaces('New_Delhi'), throwsException);
     });
 
     test('Throw Exception on internal server error', () async {
       when(mockdio.get(any, queryParameters: anyNamed('queryParameters')))
           .thenThrow(Exception('Some Error Occured'));
-      final val = dataSource.searchPlaces('New_Delhi');
-      expect(val, throwsException);
+      expectLater(dataSource.searchPlaces('New_Delhi'), throwsException);
     });
   });
 
@@ -113,11 +111,8 @@ void main() {
                 requestOptions: RequestOptions(path: ''),
               ));
 
-      // Act
-      final call = dataSource.getPlaceDetails(tPlaceId);
-
-      // Assert
-      expect(call, throwsException);
+      // Act & Assert
+      expectLater(dataSource.getPlaceDetails(tPlaceId), throwsException);
     });
 
     test('Should throw Exception on network/Dio error', () async {
@@ -128,11 +123,8 @@ void main() {
         error: 'No Internet',
       ));
 
-      // Act
-      final call = dataSource.getPlaceDetails(tPlaceId);
-
-      // Assert
-      expect(call, throwsException);
+      // Act & Assert
+      expectLater(dataSource.getPlaceDetails(tPlaceId), throwsException);
     });
   });
 }

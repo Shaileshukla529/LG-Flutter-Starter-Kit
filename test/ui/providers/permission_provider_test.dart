@@ -40,6 +40,8 @@ void main() {
 
     test('should update state when permission is granted', () async {
       // Arrange
+      when(mockService.checkLocationPermission())
+          .thenAnswer((_) async => false);
       when(mockService.requestLocationPermission())
           .thenAnswer((_) async => true);
 
@@ -56,6 +58,8 @@ void main() {
 
     test('should handle permission request error gracefully', () async {
       // Arrange
+      when(mockService.checkLocationPermission())
+          .thenAnswer((_) async => false);
       when(mockService.requestLocationPermission())
           .thenThrow(Exception('Permission Error'));
 
