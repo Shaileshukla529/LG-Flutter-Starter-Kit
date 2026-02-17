@@ -59,7 +59,7 @@ The project follows **Clean Architecture** to ensure every layer is independentl
 
 This is the **brain** of the app. It contains pure Dart — no Flutter imports, no SSH details, no API calls. Just business rules.
 
-- **Entities**: `ConnectionEntity`, `FlyToEntity`, `PlaceEntity`, `PermissionEntity` — immutable data classes representing core concepts.
+- **Entities**: `ConnectionEntity`, `FlyToEntity`, `PlaceEntity`, `PermissionEntity`, `OrbitEntity` — immutable data classes representing core concepts.
 - **Repository Interfaces**: `LGRepository` and `PlacesRepository` — abstract contracts that the data layer must fulfill.
 - **Use Cases**: 12 single-purpose classes like `ConnectToLgUseCase`, `FlyToLocationUseCase`, `RebootLgUseCase`, `SearchPlaces` — each does exactly one thing.
 
@@ -69,7 +69,7 @@ _Why this matters_: You can swap SSH for WebSockets, or replace Google Places wi
 
 This is where the **real work** happens — SSH commands, API calls, local storage.
 
-- **Data Sources**: `SshService` (SSH connection + command execution), `LgLocalDataSource` (SharedPreferences), `PlacesRemoteDataSource` (Google Places API via Dio).
+- **Data Sources**: `SshService` (SSH connection + command execution), `LgLocalDataSource` (SharedPreferences), `PlacesRemoteDataSource` (Google Places API via Dio), `PermissionServiceImpl` (runtime permission handling).
 - **Models**: `FlyToModel` and `PlaceModel` — handle serialization (toJson/fromJson) and conversion to domain entities.
 - **Repository Implementations**: `LgRepositoryImpl` and `PlacesRepositoryImpl` — implement the domain interfaces by orchestrating data sources.
 
@@ -81,7 +81,7 @@ This is what the user sees and interacts with.
 
 - **Pages**: `HomePage` (quick actions + status), `SettingsPage` (connection config + system controls), `MapPage` (Google Maps + search), `MainPage` (navigation shell with drawer).
 - **Providers**: Riverpod `StateNotifier` providers for `ConnectionProvider`, `PermissionProvider`, and `NavigationProvider` — they hold reactive state and delegate actions to use cases.
-- **Widgets**: Shared components like `AppDrawer`.
+- **Widgets**: Shared components like `AppDrawer`, `ButtonWidget`, `CustomActionButton`, and `LgCard`.
 
 _Design choice_: Providers call use cases, not repositories directly. This keeps the UI layer thin and testable.
 
@@ -96,19 +96,19 @@ lib/
 │   ├── di/                    # GetIt service locator + Riverpod provider setup
 │   └── errors/                # Custom exceptions
 ├── data/
-│   ├── datasources/           # SshService, LgLocalDataSource, PlacesRemoteDataSource
+│   ├── datasources/           # SshService, LgLocalDataSource, PlacesRemoteDataSource, PermissionServiceImpl
 │   ├── models/                # FlyToModel, PlaceModel (serialization)
 │   └── repositories/          # LgRepositoryImpl, PlacesRepositoryImpl
 ├── domain/
-│   ├── entities/              # ConnectionEntity, FlyToEntity, PlaceEntity, PermissionEntity
+│   ├── entities/              # ConnectionEntity, FlyToEntity, PlaceEntity, PermissionEntity, OrbitEntity
 │   ├── repositories/          # LGRepository, PlacesRepository (interfaces)
 │   ├── services/              # ISshService, IPermissionService (interfaces)
 │   └── usecases/              # ConnectToLg, FlyTo, SearchPlaces, Reboot, Shutdown...
 └── ui/
     ├── pages/                 # HomePage, SettingsPage, MapPage, MainPage
-    ├── providers/             # ConnectionProvider, PermissionProvider, NavigationProvider
+    ├── providers/             # ConnectionProvider, PermissionProvider, NavigationProvider, LgProviders
     ├── utils/                 # LgTaskMixin, SnackbarUtils
-    └── widgets/               # AppDrawer
+    └── widgets/               # AppDrawer, ButtonWidget, CustomActionButton, shared/LgCard
 ```
 
 ---
@@ -183,7 +183,8 @@ All skills are located in `.agent/skills/` and workflows in `.agent/workflows/`.
 | Environment | `flutter_dotenv` | API key management via `.env` files |
 | Testing | `mockito` + `build_runner` | Auto-generated mocks for unit tests |
 | Permissions | `permission_handler` | Runtime permission management |
-| Equality | `equatable` | Value equality for entities |
+| Logging | `logger` | Structured logging with levels |
+
 
 ---
 

@@ -520,7 +520,7 @@ logger: (for LogService — structured logging)
 
 # Utilities
 path_provider: ^2.1.3
-equatable: ^2.0.8
+
 
 # Dev Dependencies
 mockito: ^5.4.4

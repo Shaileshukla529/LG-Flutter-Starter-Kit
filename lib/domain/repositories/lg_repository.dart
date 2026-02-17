@@ -3,7 +3,6 @@ import '../entities/fly_to_entity.dart';
 import '../entities/orbit_entity.dart';
 
 /// Abstract interface for Liquid Galaxy operations.
-/// Follows Clean Architecture - domain layer defines contracts.
 abstract class LGRepository {
   // ─────────────────────────────────────────────────────────────
   // CONNECTION MANAGEMENT
@@ -46,7 +45,6 @@ abstract class LGRepository {
   Future<void> sendKmlToSlave(String kmlContent, int screen);
 
   /// Send KML content to master.kml for synchronized display across all screens.
-  /// Use this for polygons, overlays, or any content that should show on all screens.
   Future<void> sendKmlToMaster(String kmlContent);
 
   /// Clean all KML content from LG (master.kml, all slave files, and navigation).
@@ -60,8 +58,7 @@ abstract class LGRepository {
   // ─────────────────────────────────────────────────────────────
 
   /// Display app logo on the leftmost screen.
-  /// Uploads image from [assetPath] (relative to assets/) via SFTP,
-  /// then sends KML referencing it via HTTP.
+
   Future<void> sendLogo({String assetPath = 'image/logo.png'});
 
   /// Clear logo from the leftmost screen.
